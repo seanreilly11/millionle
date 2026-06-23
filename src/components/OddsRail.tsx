@@ -12,13 +12,15 @@ export function OddsRail({ guess, answer }: { guess: number; answer: number }) {
   return (
     <div className="rail">
       <div className="label">How close you landed</div>
-      <div className="track" style={{ marginTop: 30 }}>
+      <div className="track" style={{ marginTop: 32, marginBottom: 28 }}>
         <div className="ends"><span>1</span><span>1,000,000</span></div>
         <div className="fill" style={{ left: `${left}%`, width: `${width}%` }} />
-        <div className="pin" style={{ left: `${gp}%`, background: "var(--signal)" }} />
-        <div className="pinlab" style={{ left: `${gp}%`, color: "#08776a" }}>YOU {formatNumber(guess)}</div>
+        {/* ANSWER always above the track */}
         <div className="pin" style={{ left: `${ap}%`, background: "var(--ink)" }} />
-        <div className="pinlab" style={{ left: `${ap}%`, top: -52, color: "var(--ink)" }}>ANSWER {formatNumber(answer)}</div>
+        <div className="pinlab" style={{ left: `${ap}%`, top: -28, color: "var(--ink)" }}>ANSWER {formatNumber(answer)}</div>
+        {/* YOU always below the track */}
+        <div className="pin" style={{ left: `${gp}%`, background: "var(--signal)" }} />
+        <div className="pinlab" style={{ left: `${gp}%`, top: 22, color: "#08776a" }}>YOU {formatNumber(guess)}</div>
       </div>
     </div>
   );
