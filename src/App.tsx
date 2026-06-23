@@ -28,10 +28,12 @@ export default function App() {
     const existing = findByDate(date);
     if (existing && !result) {
       setGuess(existing.guess);
-      api.guess({ uuid: getUuid(), guess: existing.guess, offset: offset() }).then((r) => {
-        setResult(r);
-        setPhase("result");
-      });
+      api
+        .guess({ uuid: getUuid(), guess: existing.guess, offset: offset() })
+        .then((r) => {
+          setResult(r);
+          setPhase("result");
+        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -48,27 +50,45 @@ export default function App() {
   async function handleJoin(name: string) {
     setName(name);
     await api.submitName({ uuid: getUuid(), name, offset: offset() });
+    await loadLeaderboard();
+  }
+
+  async function loadLeaderboard() {
     const lb = await api.leaderboard({ uuid: getUuid(), offset: offset() });
     setBoard(lb.entries);
     setPhase("joined");
   }
 
-  if (phase === "idle") return <IdleScreen puzzle={puzzle} onGuess={handleGuess} />;
+  if (phase === "idle")
+    return <IdleScreen puzzle={puzzle} onGuess={handleGuess} />;
 
   if (phase === "joined" && result) {
     return (
       <div className="app">
         <div className="row">
-          <div className="mark" style={{ fontSize: 18 }}>MILLI<span className="o">O</span>NLE</div>
+          <div className="mark" style={{ fontSize: 18 }}>
+            MILLI<span className="o">O</span>NLE
+          </div>
           <div className="puzzle">No. {result.puzzle} · on the board</div>
         </div>
+        <button className="back-btn" onClick={() => setPhase("result")}>
+          ← Back to result
+        </button>
         <Leaderboard entries={board} />
       </div>
     );
   }
 
   if (result) {
-    return <ResultScreen result={result} guess={guess} defaultName={getName()} onJoin={handleJoin} />;
+    return (
+      <ResultScreen
+        result={result}
+        guess={guess}
+        defaultName={getName()}
+        onJoin={handleJoin}
+        onSeeLeaderboard={loadLeaderboard}
+      />
+    );
   }
 
   return <div className="app" aria-busy={loading} />;

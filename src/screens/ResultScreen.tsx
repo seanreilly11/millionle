@@ -9,20 +9,32 @@ import { ShareButton } from "../components/ShareButton";
 import { formatNumber } from "../engine/format";
 
 export function ResultScreen({
-  result, guess, defaultName, onJoin,
+  result,
+  guess,
+  defaultName,
+  onJoin,
+  onSeeLeaderboard,
 }: {
   result: GuessResponse;
   guess: number;
   defaultName: string;
   onJoin: (name: string) => void;
+  onSeeLeaderboard: () => void;
 }) {
   const isWin = result.distance === 0;
+  const boardAction = result.hasJoined ? (
+    <button className="go see-lb" onClick={onSeeLeaderboard}>
+      See leaderboard
+    </button>
+  ) : (
+    <JoinBoard defaultName={defaultName} onJoin={onJoin} />
+  );
 
   if (isWin) {
     return (
       <div className="app winscr">
         <WinCelebration rank={result.rank} />
-        <JoinBoard defaultName={defaultName} onJoin={onJoin} />
+        {boardAction}
       </div>
     );
   }
@@ -30,7 +42,9 @@ export function ResultScreen({
   return (
     <div className="app">
       <div className="row">
-        <div className="mark" style={{ fontSize: 18 }}>MILLI<span className="o">O</span>NLE</div>
+        <div className="mark" style={{ fontSize: 18 }}>
+          MILLI<span className="o">O</span>NLE
+        </div>
         <div className="puzzle">No. {result.puzzle} · locked</div>
       </div>
 
@@ -46,11 +60,18 @@ export function ResultScreen({
         <div className="k">off by</div>
         <div className="n">{formatNumber(result.distance)}</div>
       </div>
-      <div className="rankline">You'd sit at <b>#{formatNumber(result.rank)}</b> on today's board.</div>
+      <div className="rankline">
+        You'd sit at <b>#{formatNumber(result.rank)}</b> on today's board.
+      </div>
 
       <StatChips stats={result.stats} />
-      <ShareButton puzzle={result.puzzle} guess={guess} distance={result.distance} score={result.score} />
-      <JoinBoard defaultName={defaultName} onJoin={onJoin} />
+      <ShareButton
+        puzzle={result.puzzle}
+        guess={guess}
+        distance={result.distance}
+        score={result.score}
+      />
+      {boardAction}
     </div>
   );
 }

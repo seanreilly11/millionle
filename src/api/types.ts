@@ -8,6 +8,7 @@ export interface GuessResponse {
   answer: number;
   rank: number;
   alreadyPlayed: boolean;
+  hasJoined: boolean;
   tier: TierId;
   date: string;
   puzzle: number;

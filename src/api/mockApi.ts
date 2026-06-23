@@ -113,6 +113,7 @@ export const mockApi: GameApi = {
       answer,
       rank: rankFor(row.score, date),
       alreadyPlayed,
+      hasJoined: getMyName(date) !== null,
       tier: tier(row.distance).id,
       date,
       puzzle: puzzleNumber(MILLIONLE.launch, date),

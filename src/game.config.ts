@@ -6,5 +6,5 @@ export const MILLIONLE: GameConfig = {
   min: 1,
   max: 1_000_000,
   guesses: 1,
-  launch: "2026-01-01",
+  launch: "2026-06-23",
 };
