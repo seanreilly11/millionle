@@ -12,6 +12,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@fontsource-variable/archivo": "^5.2.8",
+    "@fontsource/space-mono": "^5.2.9",
     "canvas-confetti": "^1.9.4",
     "motion": "^12.41.0",
     "react": "^19.2.7",
