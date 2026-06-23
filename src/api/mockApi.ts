@@ -132,11 +132,7 @@ export const mockApi: GameApi = {
   async leaderboard(req: LeaderboardRequest): Promise<LeaderboardResponse> {
     await wait();
     const date = req.date ?? localDate(req.offset ?? 0);
-    const limit = req.limit ?? 100;
-    const rows: BoardRow[] = syntheticBoard(date).map((o) => ({
-      ...o,
-      isMe: false,
-    }));
+    const rows: BoardRow[] = syntheticBoard(date).map((o) => ({ ...o, isMe: false }));
 
     const myRow = findByDate(date);
     const myName = getMyName(date) ?? getName();
@@ -152,6 +148,10 @@ export const mockApi: GameApi = {
       return entry;
     });
 
-    return { date, entries: ranked.slice(0, limit), myRank };
+    const top10 = ranked.slice(0, 10);
+    const myEntry = myRank !== null && myRank > 10 ? ranked[myRank - 1] : null;
+    const entries = myEntry ? [...top10, myEntry] : top10;
+
+    return { date, entries, myRank };
   },
 };

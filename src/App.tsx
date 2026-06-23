@@ -48,7 +48,7 @@ export default function App() {
   async function handleJoin(name: string) {
     setName(name);
     await api.submitName({ uuid: getUuid(), name, offset: offset() });
-    const lb = await api.leaderboard({ uuid: getUuid(), offset: offset(), limit: 100 });
+    const lb = await api.leaderboard({ uuid: getUuid(), offset: offset() });
     setBoard(lb.entries);
     setPhase("joined");
   }
