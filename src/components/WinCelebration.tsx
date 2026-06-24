@@ -19,7 +19,7 @@ export function WinCelebration({ rank }: { rank: number }) {
     <>
       <div className="glow-head">★ One in a million ★</div>
       <div className="winnum">{formatNumber(1_000_000)}</div>
-      <div className="winsub">Dead on · perfect score</div>
+      <div className="winsub">Dead on</div>
       <div className="rank1"><span className="hash">#{rank}</span><span>on today's board</span></div>
     </>
   );

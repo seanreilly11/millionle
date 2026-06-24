@@ -11,12 +11,11 @@ import type {
 import { MILLIONLE } from "../game.config";
 import { answerForDate } from "../engine/answer";
 import {
-  score as scoreFn,
   distance as distanceFn,
   tier,
 } from "../engine/score";
 import { localDate, puzzleNumber } from "../engine/date";
-import { computeStats, type GuessRow } from "../engine/stats";
+import { computeStats } from "../engine/stats";
 import { seededRandom } from "../engine/prng";
 import { readHistory, appendHistory, findByDate } from "../store/history";
 import { getName } from "../store/identity";
@@ -49,19 +48,19 @@ const FAKE_NAMES = [
 
 interface BoardRow {
   name: string;
-  score: number;
+  distance: number;
   isMe: boolean;
 }
 
 /** Deterministic synthetic opponents for a date. */
-function syntheticBoard(date: string): { name: string; score: number }[] {
+function syntheticBoard(date: string): { name: string; distance: number }[] {
   const rand = seededRandom(`board:${date}`);
   const count = 40 + Math.floor(rand() * 60); // 40-99 opponents
-  const rows: { name: string; score: number }[] = [];
+  const rows: { name: string; distance: number }[] = [];
   for (let i = 0; i < count; i++) {
-    // skew toward high scores so the board feels competitive
-    const s = 1_000_000 - Math.floor(Math.pow(rand(), 2) * 1_000_000);
-    rows.push({ name: `${FAKE_NAMES[i % FAKE_NAMES.length]}${i}`, score: s });
+    // skew toward low distances so the board feels competitive
+    const d = Math.floor(Math.pow(rand(), 2) * 1_000_000);
+    rows.push({ name: `${FAKE_NAMES[i % FAKE_NAMES.length]}${i}`, distance: d });
   }
   return rows;
 }
@@ -74,8 +73,8 @@ function getMyName(date: string): string | null {
   return localStorage.getItem(namedKey(date));
 }
 
-function rankFor(myScore: number, date: string): number {
-  const better = syntheticBoard(date).filter((o) => o.score > myScore).length;
+function rankFor(myDistance: number, date: string): number {
+  const better = syntheticBoard(date).filter((o) => o.distance < myDistance).length;
   return better + 1;
 }
 
@@ -86,35 +85,28 @@ export const mockApi: GameApi = {
     const answer = answerForDate(MILLIONLE, date);
     const existing = findByDate(date);
 
-    let row: GuessRow;
+    let dist: number;
     let alreadyPlayed = false;
     if (existing) {
       alreadyPlayed = true;
-      row = { date, distance: existing.distance, score: existing.score };
+      dist = existing.distance;
     } else {
-      const dist = distanceFn(req.guess, answer);
-      const sc = scoreFn(req.guess, answer);
-      appendHistory({ date, guess: req.guess, distance: dist, score: sc });
-      row = { date, distance: dist, score: sc };
+      dist = distanceFn(req.guess, answer);
+      appendHistory({ date, guess: req.guess, distance: dist });
     }
 
     const stats = computeStats(
-      readHistory().map((r) => ({
-        date: r.date,
-        distance: r.distance,
-        score: r.score,
-      })),
+      readHistory().map((r) => ({ date: r.date, distance: r.distance })),
       date,
     );
 
     return {
-      score: row.score,
-      distance: row.distance,
+      distance: dist,
       answer,
-      rank: rankFor(row.score, date),
+      rank: rankFor(dist, date),
       alreadyPlayed,
       hasJoined: getMyName(date) !== null,
-      tier: tier(row.distance).id,
+      tier: tier(dist).id,
       date,
       puzzle: puzzleNumber(MILLIONLE.launch, date),
       stats,
@@ -127,7 +119,7 @@ export const mockApi: GameApi = {
     const row = findByDate(date);
     if (!row) throw new Error("no entry for date");
     localStorage.setItem(namedKey(date), req.name);
-    return { ok: true, rank: rankFor(row.score, date) };
+    return { ok: true, rank: rankFor(row.distance, date) };
   },
 
   async leaderboard(req: LeaderboardRequest): Promise<LeaderboardResponse> {
@@ -139,12 +131,12 @@ export const mockApi: GameApi = {
     const myName = getMyName(date) ?? getName();
     let myRank: number | null = null;
     if (myRow && getMyName(date)) {
-      rows.push({ name: myName || "you", score: myRow.score, isMe: true });
+      rows.push({ name: myName || "you", distance: myRow.distance, isMe: true });
     }
 
-    rows.sort((a, b) => b.score - a.score);
+    rows.sort((a, b) => a.distance - b.distance);
     const ranked: LeaderboardEntry[] = rows.map((r, i) => {
-      const entry = { rank: i + 1, name: r.name, score: r.score, isMe: r.isMe };
+      const entry = { rank: i + 1, name: r.name, distance: r.distance, isMe: r.isMe };
       if (r.isMe) myRank = entry.rank;
       return entry;
     });

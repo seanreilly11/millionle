@@ -1,4 +1,4 @@
-export interface HistoryRow { date: string; guess: number; distance: number; score: number; }
+export interface HistoryRow { date: string; guess: number; distance: number; }
 const KEY = "millionle.history";
 
 export function readHistory(): HistoryRow[] {

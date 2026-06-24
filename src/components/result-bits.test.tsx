@@ -10,11 +10,10 @@ describe("result bits", () => {
     render(<DistanceBadge distance={47231} />);
     expect(screen.getByText(/within 50k/i)).toBeInTheDocument();
   });
-  test("StatChips show all three stats", () => {
-    render(<StatChips stats={{ streak: 7, closestEver: 312, lifetimePoints: 8412769 }} />);
+  test("StatChips show streak and closest ever", () => {
+    render(<StatChips stats={{ streak: 7, closestEver: 312 }} />);
     expect(screen.getByText("7")).toBeInTheDocument();
     expect(screen.getByText("312")).toBeInTheDocument();
-    expect(screen.getByText("8,412,769")).toBeInTheDocument();
   });
   test("JoinBoard submits the autofilled name", async () => {
     const onJoin = vi.fn();

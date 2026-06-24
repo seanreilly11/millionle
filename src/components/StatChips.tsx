@@ -8,10 +8,6 @@ export function StatChips({ stats }: { stats: Stats }) {
         <div className="chip"><div className="k">Streak</div><div className="v">{stats.streak}</div></div>
         <div className="chip"><div className="k">Closest ever</div><div className="v">{formatNumber(stats.closestEver)}</div></div>
       </div>
-      <div className="statbar">
-        <span className="k">Lifetime points</span>
-        <span className="bv">{formatNumber(stats.lifetimePoints)}</span>
-      </div>
     </>
   );
 }

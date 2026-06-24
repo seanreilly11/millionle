@@ -1,5 +1,4 @@
 import type { GuessResponse } from "../api/types";
-import { ScoreCounter } from "../components/ScoreCounter";
 import { DistanceBadge } from "../components/DistanceBadge";
 import { OddsRail } from "../components/OddsRail";
 import { StatChips } from "../components/StatChips";
@@ -49,8 +48,6 @@ export function ResultScreen({
       </div>
 
       <div style={{ marginTop: 16 }}>
-        <div className="label">Your score today</div>
-        <ScoreCounter value={result.score} />
         <DistanceBadge distance={result.distance} />
       </div>
 
@@ -69,7 +66,6 @@ export function ResultScreen({
         puzzle={result.puzzle}
         guess={guess}
         distance={result.distance}
-        score={result.score}
       />
       {boardAction}
     </div>

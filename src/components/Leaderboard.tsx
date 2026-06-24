@@ -13,7 +13,7 @@ export function Leaderboard({ entries }: { entries: LeaderboardEntry[] }) {
           <div className={`lb-row${e.isMe ? " me" : ""}`}>
             <span className="lb-rank">#{e.rank}</span>
             <span className="lb-name">{e.name}</span>
-            <span className="lb-score">{formatNumber(e.score)}</span>
+            <span className="lb-distance">{e.distance === 0 ? "dead on" : `off by ${formatNumber(e.distance)}`}</span>
           </div>
         </Fragment>
       ))}
