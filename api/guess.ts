@@ -33,14 +33,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await sb.from('plays').insert({ uuid, date, guess, distance })
   }
 
-  // Rank: count of plays with strictly lower distance today
-  const { count: betterCount } = await sb
-    .from('plays')
-    .select('*', { count: 'exact', head: true })
+  // Rank: position among named players only
+  const { data: namedForRank } = await sb
+    .from('names')
+    .select('uuid')
     .eq('date', date)
-    .lt('distance', finalDistance)
 
-  const rank = (betterCount ?? 0) + 1
+  const namedUuidsForRank = (namedForRank ?? []).map((n) => n.uuid)
+
+  let rank = 1
+  if (namedUuidsForRank.length > 0) {
+    const { count: betterCount } = await sb
+      .from('plays')
+      .select('*', { count: 'exact', head: true })
+      .eq('date', date)
+      .lt('distance', finalDistance)
+      .in('uuid', namedUuidsForRank)
+    rank = (betterCount ?? 0) + 1
+  }
 
   // Stats: all plays for this uuid
   const { data: allPlays } = await sb

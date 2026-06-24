@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { getSupabase } from './_lib/supabase'
 import { dateFromOffset } from './_lib/date'
+import { isProfane } from '../src/utils/profanity'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
@@ -8,6 +9,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { uuid, name, offset } = req.body as { uuid: string; name: string; offset: number }
   if (typeof uuid !== 'string' || !uuid || typeof name !== 'string' || !name || typeof offset !== 'number') {
     return res.status(400).json({ error: 'Missing required fields' })
+  }
+  if (isProfane(name)) {
+    return res.status(400).json({ error: 'Profanity not allowed' })
   }
 
   const sb = getSupabase()

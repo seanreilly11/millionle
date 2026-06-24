@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "dev:full": "vercel dev",
-    "dev:api": "tsx --env-file=.env.local api/dev-server.ts"
+    "dev:api": "tsx watch --env-file=.env.local api/dev-server.ts"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.2.8",

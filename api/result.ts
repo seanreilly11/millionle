@@ -27,18 +27,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const answer = answerForDate(date)
 
-  const { count: betterCount } = await sb
-    .from('plays')
-    .select('*', { count: 'exact', head: true })
-    .eq('date', date)
-    .lt('distance', play.distance)
-
   const { data: nameRow } = await sb
     .from('names')
     .select('name')
     .eq('uuid', uuid)
     .eq('date', date)
     .single()
+
+  const { data: namedForRank } = await sb
+    .from('names')
+    .select('uuid')
+    .eq('date', date)
+
+  const namedUuidsForRank = (namedForRank ?? []).map((n) => n.uuid)
+
+  let rank = 1
+  if (namedUuidsForRank.length > 0) {
+    const { count: betterCount } = await sb
+      .from('plays')
+      .select('*', { count: 'exact', head: true })
+      .eq('date', date)
+      .lt('distance', play.distance)
+      .in('uuid', namedUuidsForRank)
+    rank = (betterCount ?? 0) + 1
+  }
 
   const { data: allPlays } = await sb
     .from('plays')
@@ -54,7 +66,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     guess: play.guess,
     distance: play.distance,
     answer,
-    rank: (betterCount ?? 0) + 1,
+    rank,
     hasJoined: nameRow !== null,
     tier: tier(play.distance),
     date,
