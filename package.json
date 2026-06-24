@@ -14,10 +14,12 @@
   "dependencies": {
     "@fontsource-variable/archivo": "^5.2.8",
     "@fontsource/space-mono": "^5.2.9",
+    "@tailwindcss/vite": "^4.3.1",
     "canvas-confetti": "^1.9.4",
     "motion": "^12.41.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "tailwindcss": "^4.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
