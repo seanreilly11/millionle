@@ -459,7 +459,16 @@ body {
   font-weight: 700;
   flex: 1;
 }
-.board .lb-score {
+.board .lb-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 14px 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--steel);
+}
+.board .lb-distance {
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }

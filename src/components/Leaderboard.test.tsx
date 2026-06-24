@@ -9,7 +9,7 @@ describe("Leaderboard", () => {
       { rank: 2, name: "seanr", distance: 47231, isMe: true },
     ]} />);
     expect(screen.getByText("ava1")).toBeInTheDocument();
-    expect(screen.getByText("off by 47,231")).toBeInTheDocument();
+    expect(screen.getByText("47,231")).toBeInTheDocument();
     expect(screen.getByText("seanr").closest(".lb-row")).toHaveClass("me");
   });
   test("shows dead on for distance 0", () => {
