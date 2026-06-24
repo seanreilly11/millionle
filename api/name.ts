@@ -10,7 +10,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (typeof uuid !== 'string' || !uuid || typeof name !== 'string' || !name || typeof offset !== 'number') {
     return res.status(400).json({ error: 'Missing required fields' })
   }
-  if (isProfane(name)) {
+  const cleanName = name.trim().slice(0, 20)
+  if (!cleanName) return res.status(400).json({ error: 'Name required' })
+  if (isProfane(cleanName)) {
     return res.status(400).json({ error: 'Profanity not allowed' })
   }
 
@@ -20,7 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Idempotent: ignore if name already exists for this uuid+date
   await sb
     .from('names')
-    .upsert({ uuid, date, name }, { onConflict: 'uuid,date', ignoreDuplicates: true })
+    .upsert({ uuid, date, name: cleanName }, { onConflict: 'uuid,date', ignoreDuplicates: true })
 
   // Rank among named players for this date
   const { data: myPlay } = await sb
