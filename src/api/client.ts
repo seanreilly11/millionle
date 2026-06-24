@@ -1,7 +1,40 @@
-import type { GameApi } from "./types";
-import { mockApi } from "./mockApi";
+import type { GameApi, GuessRequest, NameRequest, LeaderboardRequest } from './types'
+import { mockApi } from './mockApi'
 
-// Swap to httpApi here when the real backend exists.
-export function getApi(): GameApi {
-  return mockApi;
+const httpApi: GameApi = {
+  async guess(req: GuessRequest) {
+    const res = await fetch('/api/guess', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req),
+    })
+    if (!res.ok) throw new Error(`/api/guess failed: ${res.status}`)
+    return res.json()
+  },
+
+  async submitName(req: NameRequest) {
+    const res = await fetch('/api/name', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req),
+    })
+    if (!res.ok) throw new Error(`/api/name failed: ${res.status}`)
+    return res.json()
+  },
+
+  async leaderboard(req: LeaderboardRequest) {
+    const params = new URLSearchParams()
+    if (req.uuid) params.set('uuid', req.uuid)
+    if (req.offset !== undefined) params.set('offset', String(req.offset))
+    if (req.date) params.set('date', req.date)
+    const res = await fetch(`/api/leaderboard?${params}`)
+    if (!res.ok) throw new Error(`/api/leaderboard failed: ${res.status}`)
+    return res.json()
+  },
 }
+
+export function getApi(): GameApi {
+  return httpApi
+}
+
+export { mockApi }

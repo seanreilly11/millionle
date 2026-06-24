@@ -4,6 +4,10 @@ import userEvent from "@testing-library/user-event";
 import App from "./App";
 
 vi.mock("canvas-confetti", () => ({ default: vi.fn() }));
+vi.mock("./api/client", async () => {
+  const { mockApi } = await import("./api/mockApi");
+  return { getApi: () => mockApi, mockApi };
+});
 
 describe("App flow", () => {
   beforeEach(() => localStorage.clear());
