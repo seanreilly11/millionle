@@ -6,7 +6,6 @@ import type { GuessResponse } from "../api/types";
 vi.mock("canvas-confetti", () => ({ default: vi.fn() }));
 
 const base: GuessResponse = {
-  score: 952769,
   distance: 47231,
   answer: 365538,
   rank: 1243,
@@ -15,11 +14,11 @@ const base: GuessResponse = {
   tier: "within50k",
   date: "2026-06-23",
   puzzle: 432,
-  stats: { streak: 7, lifetimePoints: 8412769, closestEver: 312 },
+  stats: { streak: 7, closestEver: 312 },
 };
 
 describe("ResultScreen", () => {
-  test("loss variant shows score, rank and stats", () => {
+  test("loss variant shows distance, rank and stats", () => {
     render(
       <ResultScreen
         result={base}
@@ -29,14 +28,12 @@ describe("ResultScreen", () => {
         onSeeLeaderboard={vi.fn()}
       />,
     );
-    expect(screen.getByText("952,769")).toBeInTheDocument();
+    expect(screen.getByText("47,231")).toBeInTheDocument();
     expect(screen.getByText(/#1,243/)).toBeInTheDocument();
-    expect(screen.getByText("8,412,769")).toBeInTheDocument();
   });
   test("win variant shows the detonation and no stat bar", () => {
     const win = {
       ...base,
-      score: 1_000_000,
       distance: 0,
       answer: 500000,
       tier: "dead-on" as const,

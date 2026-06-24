@@ -13,7 +13,7 @@ describe("App flow", () => {
     await userEvent.type(await screen.findByLabelText(/your one guess/i), "500000");
     await userEvent.click(screen.getByRole("button", { name: /lock in guess/i }));
 
-    await waitFor(() => expect(screen.getByText(/your score today|one in a million/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/off by|one in a million/i)).toBeInTheDocument());
 
     unmount();
     render(<App />);

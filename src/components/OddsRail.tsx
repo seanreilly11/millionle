@@ -1,4 +1,5 @@
 import { formatNumber } from "../engine/format";
+import { MonoLabel } from "./MonoLabel";
 
 const MIN = 1,
   MAX = 1_000_000;
@@ -11,36 +12,36 @@ export function OddsRail({ guess, answer }: { guess: number; answer: number }) {
   const width = Math.abs(gp - ap);
 
   return (
-    <div className="rail">
-      <div className="label">How close you landed</div>
-      <div className="track" style={{ marginTop: 32, marginBottom: 28 }}>
-        <div className="ends">
+    <div className="mt-8">
+      <MonoLabel tracking="tracking-label-lg">How close you landed</MonoLabel>
+      <div className="relative h-1.5 rounded-full bg-card2 border border-line mt-12 mb-9">
+        <div className="absolute inset-0 flex justify-between top-9 font-mono text-label text-steel">
           <span>{Intl.NumberFormat().format(MIN)}</span>
           <span>{Intl.NumberFormat().format(MAX)}</span>
         </div>
         <div
-          className="fill"
+          className="absolute top-0 bottom-0 rounded-full rail-fill"
           style={{ left: `${left}%`, width: `${width}%` }}
         />
-        {/* ANSWER always above the track */}
+        {/* ANSWER pin — label above track */}
         <div
-          className="pin"
-          style={{ left: `${ap}%`, background: "var(--ink)" }}
+          className="absolute -top-1.5 w-0.5 h-4 rounded-sm bg-ink"
+          style={{ left: `${ap}%` }}
         />
         <div
-          className="pinlab"
-          style={{ left: `${ap}%`, top: -28, color: "var(--ink)" }}
+          className="absolute -top-7 -translate-x-1/2 font-mono text-label whitespace-nowrap tracking-wide text-ink"
+          style={{ left: `${ap}%` }}
         >
           ANSWER {formatNumber(answer)}
         </div>
-        {/* YOU always below the track */}
+        {/* YOU pin — label below track */}
         <div
-          className="pin"
-          style={{ left: `${gp}%`, background: "var(--signal)" }}
+          className="absolute -top-1.5 w-0.5 h-4 rounded-sm bg-signal"
+          style={{ left: `${gp}%` }}
         />
         <div
-          className="pinlab"
-          style={{ left: `${gp}%`, top: 22, color: "#08776a" }}
+          className="absolute top-5 -translate-x-1/2 font-mono text-label whitespace-nowrap tracking-wide text-badge-text"
+          style={{ left: `${gp}%` }}
         >
           YOU {formatNumber(guess)}
         </div>

@@ -1,4 +1,6 @@
 import { GuessInput } from "../components/GuessInput";
+import { AppShell } from "../components/AppShell";
+import { GameHeader } from "../components/GameHeader";
 
 export function IdleScreen({
   puzzle,
@@ -8,22 +10,15 @@ export function IdleScreen({
   onGuess: (guess: number) => void;
 }) {
   return (
-    <div className="app">
-      <div className="row">
-        <div className="mark">
-          MILLI<span className="o">O</span>NLE
-        </div>
-        <div className="puzzle">No. {puzzle}</div>
-      </div>
-      <div className="tagc">
-        <p>
-          One hidden number, <b>1 to 1,000,000</b>.
-        </p>
+    <AppShell>
+      <GameHeader puzzle={puzzle} />
+      <div className="text-center text-steel text-sm mt-7 leading-relaxed">
+        <p>One hidden number, <b className="text-ink font-semibold">1 to 1,000,000</b>.</p>
         <p>One guess — can you get it?</p>
       </div>
-      <div className="hero">
+      <div className="flex-1 flex flex-col items-center justify-center gap-4">
         <GuessInput onSubmit={onGuess} />
       </div>
-    </div>
+    </AppShell>
   );
 }

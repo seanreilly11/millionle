@@ -10,13 +10,12 @@ const offset = 0;
 describe("mockApi.guess", () => {
   beforeEach(() => localStorage.clear());
 
-  test("scores correctly and returns the answer", async () => {
+  test("returns the answer and distance", async () => {
     const uuid = getUuid();
     const date = localDate(offset);
     const answer = answerForDate(MILLIONLE, date);
     const res = await mockApi.guess({ uuid, guess: answer, offset });
     expect(res.answer).toBe(answer);
-    expect(res.score).toBe(1_000_000);
     expect(res.distance).toBe(0);
     expect(res.tier).toBe("dead-on");
     expect(res.alreadyPlayed).toBe(false);
@@ -27,7 +26,7 @@ describe("mockApi.guess", () => {
     const first = await mockApi.guess({ uuid, guess: 500000, offset });
     const second = await mockApi.guess({ uuid, guess: 1, offset });
     expect(second.alreadyPlayed).toBe(true);
-    expect(second.score).toBe(first.score);
+    expect(second.distance).toBe(first.distance);
   });
 
   test("rank is a positive integer", async () => {

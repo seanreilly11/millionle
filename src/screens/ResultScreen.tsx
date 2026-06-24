@@ -6,6 +6,10 @@ import { StatChips } from "../components/StatChips";
 import { JoinBoard } from "../components/JoinBoard";
 import { WinCelebration } from "../components/WinCelebration";
 import { ShareButton } from "../components/ShareButton";
+import { DarkButton } from "../components/DarkButton";
+import { AppShell } from "../components/AppShell";
+import { GameHeader } from "../components/GameHeader";
+import { MonoLabel } from "../components/MonoLabel";
 import { formatNumber } from "../engine/format";
 
 export function ResultScreen({
@@ -23,45 +27,42 @@ export function ResultScreen({
 }) {
   const isWin = result.distance === 0;
   const boardAction = result.hasJoined ? (
-    <button className="go see-lb" onClick={onSeeLeaderboard}>
+    <DarkButton fullWidth className="mt-3.5" onClick={onSeeLeaderboard}>
       See leaderboard
-    </button>
+    </DarkButton>
   ) : (
     <JoinBoard defaultName={defaultName} onJoin={onJoin} />
   );
 
   if (isWin) {
     return (
-      <div className="app winscr">
+      <AppShell className="win-bg justify-center">
         <WinCelebration rank={result.rank} />
         {boardAction}
-      </div>
+      </AppShell>
     );
   }
 
   return (
-    <div className="app">
-      <div className="row">
-        <div className="mark" style={{ fontSize: 18 }}>
-          MILLI<span className="o">O</span>NLE
-        </div>
-        <div className="puzzle">No. {result.puzzle} · locked</div>
-      </div>
+    <AppShell>
+      <GameHeader puzzle={result.puzzle} />
 
-      <div style={{ marginTop: 16 }}>
-        <div className="label">Your score today</div>
-        <ScoreCounter value={result.score} />
-        <DistanceBadge distance={result.distance} />
+      <div className="mt-4">
+        <MonoLabel tracking="tracking-label-lg">The answer</MonoLabel>
+        <ScoreCounter value={result.answer} />
+        <div className="mt-5">
+          <MonoLabel tracking="tracking-label">off by</MonoLabel>
+          <div className="text-3xl font-extrabold">{formatNumber(result.distance)}</div>
+        </div>
+        <div className="mt-4">
+          <DistanceBadge distance={result.distance} />
+        </div>
       </div>
 
       <OddsRail guess={guess} answer={result.answer} />
 
-      <div className="reveal">
-        <div className="k">off by</div>
-        <div className="n">{formatNumber(result.distance)}</div>
-      </div>
-      <div className="rankline">
-        You'd sit at <b>#{formatNumber(result.rank)}</b> on today's board.
+      <div className="mt-6 text-sm text-steel">
+        You'd sit at <b className="text-ink font-extrabold text-base">#{formatNumber(result.rank)}</b> on today's board.
       </div>
 
       <StatChips stats={result.stats} />
@@ -69,9 +70,8 @@ export function ResultScreen({
         puzzle={result.puzzle}
         guess={guess}
         distance={result.distance}
-        score={result.score}
       />
       {boardAction}
-    </div>
+    </AppShell>
   );
 }

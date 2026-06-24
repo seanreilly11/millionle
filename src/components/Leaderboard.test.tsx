@@ -5,11 +5,17 @@ import { Leaderboard } from "./Leaderboard";
 describe("Leaderboard", () => {
   test("renders entries and marks the player row", () => {
     render(<Leaderboard entries={[
-      { rank: 1, name: "ava1", score: 999999, isMe: false },
-      { rank: 2, name: "seanr", score: 952769, isMe: true },
+      { rank: 1, name: "ava1", distance: 1, isMe: false },
+      { rank: 2, name: "seanr", distance: 47231, isMe: true },
     ]} />);
     expect(screen.getByText("ava1")).toBeInTheDocument();
-    expect(screen.getByText("952,769")).toBeInTheDocument();
-    expect(screen.getByText("seanr").closest(".lb-row")).toHaveClass("me");
+    expect(screen.getByText("47,231")).toBeInTheDocument();
+    expect(screen.getByText("seanr").closest("div")).toHaveClass("border-signal");
+  });
+  test("shows dead on for distance 0", () => {
+    render(<Leaderboard entries={[
+      { rank: 1, name: "ace0", distance: 0, isMe: false },
+    ]} />);
+    expect(screen.getByText("dead on")).toBeInTheDocument();
   });
 });

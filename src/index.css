@@ -1,2 +1,49 @@
+@import "tailwindcss";
 @import "./styles/fonts.css";
 @import "./styles/app.css";
+
+@theme {
+  /* Colors */
+  --color-paper: #eaeef1;
+  --color-card: #ffffff;
+  --color-card2: #f4f7f8;
+  --color-ink: #0e1a22;
+  --color-steel: #5c7079;
+  --color-line: rgba(14, 26, 34, 0.12);
+  --color-line2: rgba(14, 26, 34, 0.18);
+  --color-signal: #0ea896;
+  --color-signal-soft: rgba(14, 168, 150, 0.12);
+  --color-jackpot: #e8920a;
+  --color-gold-deep: #b8780a;
+  --color-hot: #f4602a;
+  --color-badge-text: #08776a;
+  --color-badge-border: rgba(14, 168, 150, 0.32);
+
+  /* Fonts */
+  --font-num: "Archivo Variable", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+
+  /* Custom font sizes — v4 uses --text-* namespace */
+  --text-2xs: 0.5625rem;
+  --text-2xs--line-height: 1;
+  --text-label: 0.625rem;
+  --text-label--line-height: 1;
+  --text-display: 3.5rem;
+  --text-display--line-height: 0.92;
+  --text-win: 4rem;
+  --text-win--line-height: 1;
+
+  /* Custom letter-spacing */
+  --tracking-badge: 0.16em;
+  --tracking-puzzle: 0.18em;
+  --tracking-label: 0.2em;
+  --tracking-label-lg: 0.24em;
+  --tracking-input: 0.26em;
+  --tracking-heading: 0.34em;
+
+  /* Custom shadow */
+  --shadow-cta: 0 16px 30px -12px rgba(14, 168, 150, 0.6);
+
+  /* Container width */
+  --max-width-app: 26.875rem;
+}

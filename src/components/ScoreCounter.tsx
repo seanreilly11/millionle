@@ -8,7 +8,7 @@ const prefersReduced = () =>
 
 export function ScoreCounter({
   value,
-  className = "score",
+  className = "text-display font-black leading-none tracking-tight text-ink tabular-nums",
 }: {
   value: number;
   className?: string;
