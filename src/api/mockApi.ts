@@ -147,6 +147,7 @@ export const mockApi: GameApi = {
     );
     return {
       played: true as const,
+      alreadyPlayed: true as const,
       guess: existing.guess,
       distance: existing.distance,
       answer,

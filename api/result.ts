@@ -50,6 +50,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.status(200).json({
     played: true,
+    alreadyPlayed: true,
     guess: play.guess,
     distance: play.distance,
     answer,

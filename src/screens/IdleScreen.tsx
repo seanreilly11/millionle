@@ -5,9 +5,11 @@ import { GameHeader } from "../components/GameHeader";
 export function IdleScreen({
   puzzle,
   onGuess,
+  loading = false,
 }: {
   puzzle: number;
   onGuess: (guess: number) => void;
+  loading?: boolean;
 }) {
   return (
     <AppShell>
@@ -17,7 +19,7 @@ export function IdleScreen({
         <p>One guess — can you get it?</p>
       </div>
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
-        <GuessInput onSubmit={onGuess} />
+        <GuessInput onSubmit={onGuess} loading={loading} />
       </div>
     </AppShell>
   );

@@ -9,6 +9,7 @@ import { ResultScreen } from "./screens/ResultScreen";
 import { Leaderboard } from "./components/Leaderboard";
 import { AppShell } from "./components/AppShell";
 import { GameHeader } from "./components/GameHeader";
+import { InitLoader } from "./components/InitLoader";
 
 type Phase = "idle" | "result" | "joined";
 const offset = () => -new Date().getTimezoneOffset();
@@ -20,6 +21,7 @@ export default function App() {
   const [guess, setGuess] = useState(0);
   const [board, setBoard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState(true);
 
   const date = localDate(offset());
   const puzzle = puzzleNumber(MILLIONLE.launch, date);
@@ -27,12 +29,16 @@ export default function App() {
   // On load, check the server for today's result (works across devices).
   useEffect(() => {
     async function checkExisting() {
-      const r = await api.result({ uuid: getUuid(), offset: offset() });
+      const [r] = await Promise.all([
+        api.result({ uuid: getUuid(), offset: offset() }),
+        new Promise<void>((resolve) => setTimeout(resolve, 1000)),
+      ]);
       if (r.played) {
         setGuess(r.guess);
         setResult(r);
         setPhase("result");
       }
+      setInitializing(false);
     }
     checkExisting();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,8 +65,12 @@ export default function App() {
     setPhase("joined");
   }
 
+  if (initializing) return <InitLoader />;
+
   if (phase === "idle")
-    return <IdleScreen puzzle={puzzle} onGuess={handleGuess} />;
+    return (
+      <IdleScreen puzzle={puzzle} onGuess={handleGuess} loading={loading} />
+    );
 
   if (phase === "joined" && result) {
     return (

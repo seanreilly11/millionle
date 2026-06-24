@@ -11,7 +11,7 @@ describe("result bits", () => {
     expect(screen.getByText(/within 50k/i)).toBeInTheDocument();
   });
   test("StatChips show streak and closest ever", () => {
-    render(<StatChips stats={{ streak: 7, closestEver: 312 }} />);
+    render(<StatChips stats={{ streak: 7, closestEver: 312, longestStreak: 7, totalPlays: 14, averageDistance: 1500 }} />);
     expect(screen.getByText("7")).toBeInTheDocument();
     expect(screen.getByText("312")).toBeInTheDocument();
   });

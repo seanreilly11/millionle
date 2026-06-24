@@ -24,7 +24,7 @@ export interface LeaderboardResponse { date: string; entries: LeaderboardEntry[]
 export interface ResultRequest { uuid: string; offset: number; }
 export type ResultResponse =
   | { played: false }
-  | { played: true; guess: number; distance: number; answer: number; rank: number; hasJoined: boolean; tier: TierId; date: string; puzzle: number; stats: Stats; }
+  | { played: true; guess: number; distance: number; answer: number; rank: number; alreadyPlayed: true; hasJoined: boolean; tier: TierId; date: string; puzzle: number; stats: Stats; }
 
 export interface GameApi {
   guess(req: GuessRequest): Promise<GuessResponse>;
