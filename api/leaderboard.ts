@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { supabase } from './_lib/supabase'
+import { getSupabase } from './_lib/supabase'
 import { dateFromOffset } from './_lib/date'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -14,7 +14,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const date = dateParam ?? dateFromOffset(offset ? Number(offset) : 0)
 
   // Get all names for this date
-  const { data: names } = await supabase
+  const { data: names } = await getSupabase()
     .from('names')
     .select('uuid, name')
     .eq('date', date)
@@ -26,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const namedUuids = names.map((n) => n.uuid)
 
   // Get plays for named players, sorted by distance ascending
-  const { data: plays } = await supabase
+  const { data: plays } = await getSupabase()
     .from('plays')
     .select('uuid, distance')
     .eq('date', date)

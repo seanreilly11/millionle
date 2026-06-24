@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { supabase } from './_lib/supabase'
+import { getSupabase } from './_lib/supabase'
 import { answerForDate } from './_lib/answer'
 import { dateFromOffset, puzzleNumber } from './_lib/date'
 import { tier } from './_lib/score'
@@ -9,7 +9,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   const { uuid, guess, offset } = req.body as { uuid: string; guess: number; offset: number }
-  if (!uuid || typeof guess !== 'number' || typeof offset !== 'number') {
+  if (typeof uuid !== 'string' || !uuid || typeof guess !== 'number' || typeof offset !== 'number') {
     return res.status(400).json({ error: 'Missing required fields' })
   }
 
@@ -29,7 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const finalDistance = alreadyPlayed ? existing.distance : distance
 
   if (!alreadyPlayed) {
-    await supabase.from('plays').insert({ uuid, date, guess, distance })
+    await getSupabase().from('plays').insert({ uuid, date, guess, distance })
   }
 
   // Rank: count of plays with strictly lower distance today
