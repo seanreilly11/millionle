@@ -1,4 +1,5 @@
 import type { GuessResponse } from "../api/types";
+import { ScoreCounter } from "../components/ScoreCounter";
 import { DistanceBadge } from "../components/DistanceBadge";
 import { OddsRail } from "../components/OddsRail";
 import { StatChips } from "../components/StatChips";
@@ -48,15 +49,19 @@ export function ResultScreen({
       </div>
 
       <div style={{ marginTop: 16 }}>
-        <DistanceBadge distance={result.distance} />
+        <div className="label">The answer</div>
+        <ScoreCounter value={result.answer} />
+        <div className="reveal" style={{ marginTop: 20 }}>
+          <div className="k">off by</div>
+          <div className="n">{formatNumber(result.distance)}</div>
+        </div>
+        <div style={{ marginTop: 12 }}>
+          <DistanceBadge distance={result.distance} />
+        </div>
       </div>
 
       <OddsRail guess={guess} answer={result.answer} />
 
-      <div className="reveal">
-        <div className="k">off by</div>
-        <div className="n">{formatNumber(result.distance)}</div>
-      </div>
       <div className="rankline">
         You'd sit at <b>#{formatNumber(result.rank)}</b> on today's board.
       </div>
