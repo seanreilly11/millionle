@@ -1,4 +1,4 @@
-import { seededRandom } from './prng'
+import { seededRandom } from './prng.js'
 
 const GAME_NAME = 'millionle'
 const MIN = 1

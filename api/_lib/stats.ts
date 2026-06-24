@@ -1,4 +1,4 @@
-import { addDays } from './date'
+import { addDays } from './date.js'
 
 export interface StatsRow { date: string; distance: number }
 

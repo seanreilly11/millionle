@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { getSupabase } from './_lib/supabase'
-import { answerForDate } from './_lib/answer'
-import { dateFromOffset, puzzleNumber } from './_lib/date'
-import { tier } from './_lib/score'
-import { computeStats } from './_lib/stats'
+import { getSupabase } from './_lib/supabase.js'
+import { answerForDate } from './_lib/answer.js'
+import { dateFromOffset, puzzleNumber } from './_lib/date.js'
+import { tier } from './_lib/score.js'
+import { computeStats } from './_lib/stats.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' })

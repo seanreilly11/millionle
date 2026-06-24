@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { getSupabase } from './_lib/supabase'
-import { dateFromOffset } from './_lib/date'
-import { isProfane } from '../src/utils/profanity'
+import { getSupabase } from './_lib/supabase.js'
+import { dateFromOffset } from './_lib/date.js'
+import { isProfane } from '../src/utils/profanity.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
