@@ -1,18 +1,35 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { formatNumber } from "../engine/format";
 
-export function ShareButton({ puzzle, guess, distance }: { puzzle: number; guess: number; distance: number }) {
+export function ShareButton({
+  puzzle,
+  distance,
+}: {
+  puzzle: number;
+  guess: number;
+  distance: number;
+}) {
   const [copied, setCopied] = useState(false);
-  const line = `MILLIONLE No.${puzzle} — ${formatNumber(guess)} → off by ${formatNumber(distance)}`;
 
-  function handleCopy() {
-    navigator.clipboard?.writeText(line).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
-    }).catch(() => {
-      prompt("Copy your result:", line);
-    });
+  const text =
+    distance === 0
+      ? `I got it! 🎯 MILLIONLE No.${puzzle}\n${window.location.origin}`
+      : `I didn't get it :( MILLIONLE No.${puzzle}\n${window.location.origin}`;
+
+  async function handleShare() {
+    if (navigator.share && navigator.maxTouchPoints > 0) {
+      await navigator.share({ text });
+      return;
+    }
+    navigator.clipboard
+      ?.writeText(text)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 3000);
+      })
+      .catch(() => {
+        prompt("Copy your result:", text);
+      });
   }
 
   return (
@@ -34,7 +51,7 @@ export function ShareButton({ puzzle, guess, distance }: { puzzle: number; guess
       </AnimatePresence>
       <button
         className="w-full border-2 border-line2 bg-transparent text-ink rounded-xl py-3.5 font-num font-bold text-sm focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:outline-none"
-        onClick={handleCopy}
+        onClick={handleShare}
       >
         Share result
       </button>
