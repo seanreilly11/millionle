@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { formatNumber, parseGuess } from "../engine/format";
 
-export function GuessInput({
-  onSubmit,
-}: {
-  onSubmit: (guess: number) => void;
-}) {
+export function GuessInput({ onSubmit }: { onSubmit: (guess: number) => void }) {
   const [raw, setRaw] = useState("");
   const parsed = parseGuess(raw);
   const display =
@@ -22,9 +18,12 @@ export function GuessInput({
 
   return (
     <>
-      <div className="guesslab">Your one guess</div>
-      <div className="guessbox">
+      <div className="font-mono text-label tracking-input text-steel uppercase">
+        Your one guess
+      </div>
+      <div className="inline-flex items-center gap-2 px-1.5 pb-3 border-b-2 border-signal">
         <input
+          className="guess-input font-num text-display font-extrabold tracking-tight text-ink w-full text-center tabular-nums"
           aria-label="Your one guess"
           inputMode="numeric"
           placeholder="412,769"
@@ -36,7 +35,7 @@ export function GuessInput({
         />
       </div>
       <button
-        className="cta"
+        className="mt-2 w-full rounded-2xl py-5 font-num font-extrabold text-lg tracking-wide text-white bg-signal shadow-cta disabled:opacity-45 disabled:cursor-not-allowed disabled:shadow-none"
         disabled={parsed === null}
         onClick={() => parsed !== null && onSubmit(parsed)}
       >

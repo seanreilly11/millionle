@@ -8,6 +8,8 @@ import type { GuessResponse, LeaderboardEntry } from "./api/types";
 import { IdleScreen } from "./screens/IdleScreen";
 import { ResultScreen } from "./screens/ResultScreen";
 import { Leaderboard } from "./components/Leaderboard";
+import { AppShell } from "./components/AppShell";
+import { GameHeader } from "./components/GameHeader";
 
 type Phase = "idle" | "result" | "joined";
 const offset = () => -new Date().getTimezoneOffset();
@@ -64,18 +66,16 @@ export default function App() {
 
   if (phase === "joined" && result) {
     return (
-      <div className="app">
-        <div className="row">
-          <div className="mark" style={{ fontSize: 18 }}>
-            MILLI<span className="o">O</span>NLE
-          </div>
-          <div className="puzzle">No. {result.puzzle} · on the board</div>
-        </div>
-        <button className="back-btn" onClick={() => setPhase("result")}>
+      <AppShell>
+        <GameHeader puzzle={result.puzzle} suffix="on the board" />
+        <button
+          className="mt-3 bg-transparent text-steel font-mono text-xs tracking-wide p-0 text-left hover:text-ink border-none"
+          onClick={() => setPhase("result")}
+        >
           ← Back to result
         </button>
         <Leaderboard entries={board} />
-      </div>
+      </AppShell>
     );
   }
 
@@ -91,5 +91,5 @@ export default function App() {
     );
   }
 
-  return <div className="app" aria-busy={loading} />;
+  return <AppShell aria-busy={loading} />;
 }

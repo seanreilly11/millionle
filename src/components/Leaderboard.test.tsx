@@ -10,7 +10,7 @@ describe("Leaderboard", () => {
     ]} />);
     expect(screen.getByText("ava1")).toBeInTheDocument();
     expect(screen.getByText("47,231")).toBeInTheDocument();
-    expect(screen.getByText("seanr").closest(".lb-row")).toHaveClass("me");
+    expect(screen.getByText("seanr").closest("div")).toHaveClass("border-signal");
   });
   test("shows dead on for distance 0", () => {
     render(<Leaderboard entries={[
