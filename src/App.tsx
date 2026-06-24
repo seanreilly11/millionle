@@ -57,6 +57,7 @@ export default function App() {
     setName(name);
     await api.submitName({ uuid: getUuid(), name, offset: offset() });
     await loadLeaderboard();
+    setResult((r) => r ? { ...r, hasJoined: true } : r);
   }
 
   async function loadLeaderboard() {
