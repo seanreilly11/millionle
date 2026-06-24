@@ -10,15 +10,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Missing required fields' })
   }
 
+  const sb = getSupabase()
   const date = dateFromOffset(offset)
 
   // Idempotent: ignore if name already exists for this uuid+date
-  await getSupabase()
+  await sb
     .from('names')
     .upsert({ uuid, date, name }, { onConflict: 'uuid,date', ignoreDuplicates: true })
 
   // Rank among named players for this date
-  const { data: myPlay } = await getSupabase()
+  const { data: myPlay } = await sb
     .from('plays')
     .select('distance')
     .eq('uuid', uuid)
@@ -28,14 +29,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!myPlay) return res.status(400).json({ error: 'No play found for this date' })
 
   // Count named players with strictly lower distance
-  const { data: namedPlays } = await getSupabase()
+  const { data: namedPlays } = await sb
     .from('names')
     .select('uuid')
     .eq('date', date)
 
   const namedUuids = (namedPlays ?? []).map((n) => n.uuid)
 
-  const { count: betterCount } = await getSupabase()
+  const { count: betterCount } = await sb
     .from('plays')
     .select('*', { count: 'exact', head: true })
     .eq('date', date)

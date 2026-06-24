@@ -13,12 +13,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Missing required fields' })
   }
 
+  const sb = getSupabase()
   const date = dateFromOffset(offset)
   const answer = answerForDate(date)
   const distance = Math.abs(guess - answer)
 
   // Check if already played
-  const { data: existing } = await supabase
+  const { data: existing } = await sb
     .from('plays')
     .select('distance')
     .eq('uuid', uuid)
@@ -29,11 +30,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const finalDistance = alreadyPlayed ? existing.distance : distance
 
   if (!alreadyPlayed) {
-    await getSupabase().from('plays').insert({ uuid, date, guess, distance })
+    await sb.from('plays').insert({ uuid, date, guess, distance })
   }
 
   // Rank: count of plays with strictly lower distance today
-  const { count: betterCount } = await supabase
+  const { count: betterCount } = await sb
     .from('plays')
     .select('*', { count: 'exact', head: true })
     .eq('date', date)
@@ -42,7 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const rank = (betterCount ?? 0) + 1
 
   // Stats: all plays for this uuid
-  const { data: allPlays } = await supabase
+  const { data: allPlays } = await sb
     .from('plays')
     .select('date, distance')
     .eq('uuid', uuid)
@@ -51,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const stats = computeStats(allPlays ?? [], date)
 
   // hasJoined: name exists for uuid + date
-  const { data: nameRow } = await supabase
+  const { data: nameRow } = await sb
     .from('names')
     .select('name')
     .eq('uuid', uuid)

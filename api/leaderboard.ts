@@ -11,10 +11,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     date?: string
   }
 
+  const sb = getSupabase()
   const date = dateParam ?? dateFromOffset(offset ? Number(offset) : 0)
 
   // Get all names for this date
-  const { data: names } = await getSupabase()
+  const { data: names } = await sb
     .from('names')
     .select('uuid, name')
     .eq('date', date)
@@ -26,7 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const namedUuids = names.map((n) => n.uuid)
 
   // Get plays for named players, sorted by distance ascending
-  const { data: plays } = await getSupabase()
+  const { data: plays } = await sb
     .from('plays')
     .select('uuid, distance')
     .eq('date', date)
