@@ -12,9 +12,9 @@ export function OddsRail({ guess, answer }: { guess: number; answer: number }) {
   const width = Math.abs(gp - ap);
 
   return (
-    <div className="mt-5">
+    <div className="mt-8">
       <MonoLabel tracking="tracking-label-lg">How close you landed</MonoLabel>
-      <div className="relative h-1.5 rounded-full bg-card2 border border-line mt-8 mb-7">
+      <div className="relative h-1.5 rounded-full bg-card2 border border-line mt-12 mb-9">
         <div className="absolute inset-0 flex justify-between top-9 font-mono text-label text-steel">
           <span>{Intl.NumberFormat().format(MIN)}</span>
           <span>{Intl.NumberFormat().format(MAX)}</span>

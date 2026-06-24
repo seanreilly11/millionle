@@ -45,7 +45,7 @@ export function ResultScreen({
 
   return (
     <AppShell>
-      <GameHeader puzzle={result.puzzle} suffix="locked" />
+      <GameHeader puzzle={result.puzzle} />
 
       <div className="mt-4">
         <MonoLabel tracking="tracking-label-lg">The answer</MonoLabel>
