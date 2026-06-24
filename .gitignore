@@ -10,7 +10,10 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+coverage
 *.local
+.env.local
+.env*.local
 
 # Visual companion scratch (brainstorming mockups)
 .superpowers/
@@ -25,3 +28,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.agents
+.mcp.json
+.vercel
+.env*

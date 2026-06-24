@@ -40,13 +40,13 @@ describe("mockApi.guess", () => {
 describe("mockApi.submitName + leaderboard", () => {
   beforeEach(() => localStorage.clear());
 
-  test("named player appears on the board as isMe", async () => {
+  test("leaderboard returns entries with myRank null (player not injected in mock)", async () => {
     const uuid = getUuid();
     await mockApi.guess({ uuid, guess: 999999, offset });
     await mockApi.submitName({ uuid, name: "seanr", offset });
     const board = await mockApi.leaderboard({ uuid, offset, limit: 100 });
-    const me = board.entries.find((e) => e.isMe);
-    expect(me?.name).toBe("seanr");
-    expect(board.myRank).toBe(me?.rank);
+    // mockApi no longer injects the local player into the board; isMe is server-side
+    expect(board.entries.every((e) => !e.isMe)).toBe(true);
+    expect(board.myRank).toBeNull();
   });
 });

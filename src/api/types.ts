@@ -21,8 +21,14 @@ export interface LeaderboardRequest { date?: string; limit?: number; uuid?: stri
 export interface LeaderboardEntry { rank: number; name: string; distance: number; isMe: boolean; }
 export interface LeaderboardResponse { date: string; entries: LeaderboardEntry[]; myRank: number | null; }
 
+export interface ResultRequest { uuid: string; offset: number; }
+export type ResultResponse =
+  | { played: false }
+  | { played: true; guess: number; distance: number; answer: number; rank: number; alreadyPlayed: true; hasJoined: boolean; tier: TierId; date: string; puzzle: number; stats: Stats; }
+
 export interface GameApi {
   guess(req: GuessRequest): Promise<GuessResponse>;
   submitName(req: NameRequest): Promise<NameResponse>;
   leaderboard(req: LeaderboardRequest): Promise<LeaderboardResponse>;
+  result(req: ResultRequest): Promise<ResultResponse>;
 }

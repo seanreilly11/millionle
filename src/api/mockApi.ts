@@ -7,6 +7,7 @@ import type {
   LeaderboardRequest,
   LeaderboardResponse,
   LeaderboardEntry,
+  ResultRequest,
 } from "./types";
 import { MILLIONLE } from "../game.config";
 import { answerForDate } from "../engine/answer";
@@ -18,7 +19,6 @@ import { localDate, puzzleNumber } from "../engine/date";
 import { computeStats } from "../engine/stats";
 import { seededRandom } from "../engine/prng";
 import { readHistory, appendHistory, findByDate } from "../store/history";
-import { getName } from "../store/identity";
 
 const LATENCY = 250;
 const wait = () => new Promise((r) => setTimeout(r, LATENCY));
@@ -65,14 +65,6 @@ function syntheticBoard(date: string): { name: string; distance: number }[] {
   return rows;
 }
 
-function namedKey(date: string) {
-  return `millionle.named.${date}`;
-}
-
-function getMyName(date: string): string | null {
-  return localStorage.getItem(namedKey(date));
-}
-
 function rankFor(myDistance: number, date: string): number {
   const better = syntheticBoard(date).filter((o) => o.distance < myDistance).length;
   return better + 1;
@@ -105,7 +97,7 @@ export const mockApi: GameApi = {
       answer,
       rank: rankFor(dist, date),
       alreadyPlayed,
-      hasJoined: getMyName(date) !== null,
+      hasJoined: false,
       tier: tier(dist).id,
       date,
       puzzle: puzzleNumber(MILLIONLE.launch, date),
@@ -118,7 +110,6 @@ export const mockApi: GameApi = {
     const date = localDate(req.offset);
     const row = findByDate(date);
     if (!row) throw new Error("no entry for date");
-    localStorage.setItem(namedKey(date), req.name);
     return { ok: true, rank: rankFor(row.distance, date) };
   },
 
@@ -127,12 +118,7 @@ export const mockApi: GameApi = {
     const date = req.date ?? localDate(req.offset ?? 0);
     const rows: BoardRow[] = syntheticBoard(date).map((o) => ({ ...o, isMe: false }));
 
-    const myRow = findByDate(date);
-    const myName = getMyName(date) ?? getName();
     let myRank: number | null = null;
-    if (myRow && getMyName(date)) {
-      rows.push({ name: myName || "you", distance: myRow.distance, isMe: true });
-    }
 
     rows.sort((a, b) => a.distance - b.distance);
     const ranked: LeaderboardEntry[] = rows.map((r, i) => {
@@ -146,5 +132,31 @@ export const mockApi: GameApi = {
     const entries = myEntry ? [...top10, myEntry] : top10;
 
     return { date, entries, myRank };
+  },
+
+  async result(req: ResultRequest) {
+    await wait();
+    const date = localDate(req.offset);
+    const existing = findByDate(date);
+    if (!existing) return { played: false as const };
+
+    const answer = answerForDate(MILLIONLE, date);
+    const stats = computeStats(
+      readHistory().map((r) => ({ date: r.date, distance: r.distance })),
+      date,
+    );
+    return {
+      played: true as const,
+      alreadyPlayed: true as const,
+      guess: existing.guess,
+      distance: existing.distance,
+      answer,
+      rank: rankFor(existing.distance, date),
+      hasJoined: false,
+      tier: tier(existing.distance).id,
+      date,
+      puzzle: puzzleNumber(MILLIONLE.launch, date),
+      stats,
+    };
   },
 };

@@ -14,7 +14,7 @@ const base: GuessResponse = {
   tier: "within50k",
   date: "2026-06-23",
   puzzle: 432,
-  stats: { streak: 7, closestEver: 312 },
+  stats: { streak: 7, closestEver: 312, longestStreak: 7, totalPlays: 14, averageDistance: 1500 },
 };
 
 describe("ResultScreen", () => {

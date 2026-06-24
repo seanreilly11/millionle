@@ -53,6 +53,16 @@
   background: linear-gradient(90deg, rgba(14, 168, 150, 0.25), #0ea896);
 }
 
+/* Init loader */
+@keyframes num-bounce {
+  0%, 55%, 100% { top: 0; }
+  28%           { top: -12px; }
+}
+.loader-bounce-char {
+  position: relative;
+  animation: num-bounce 1.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;

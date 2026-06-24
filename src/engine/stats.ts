@@ -1,17 +1,42 @@
 import { addDays } from "./date";
 
 export interface GuessRow { date: string; distance: number; }
-export interface Stats { streak: number; closestEver: number; }
+export interface Stats {
+  streak: number;
+  longestStreak: number;
+  closestEver: number;
+  totalPlays: number;
+  averageDistance: number;
+}
 
 export function computeStats(rows: GuessRow[], today: string): Stats {
-  const closestEver = rows.length ? Math.min(...rows.map((r) => r.distance)) : 0;
+  if (rows.length === 0) {
+    return { streak: 0, longestStreak: 0, closestEver: 0, totalPlays: 0, averageDistance: 0 };
+  }
 
-  const dates = new Set(rows.map((r) => r.date));
+  const closestEver = Math.min(...rows.map((r) => r.distance));
+  const totalPlays = rows.length;
+  const averageDistance = rows.reduce((sum, r) => sum + r.distance, 0) / rows.length;
+
+  const dateSet = new Set(rows.map((r) => r.date));
   let streak = 0;
   let cursor = today;
-  while (dates.has(cursor)) {
+  while (dateSet.has(cursor)) {
     streak++;
     cursor = addDays(cursor, -1);
   }
-  return { streak, closestEver };
+
+  const sorted = [...rows].sort((a, b) => (a.date < b.date ? -1 : 1));
+  let longestStreak = 1;
+  let run = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    if (addDays(sorted[i - 1].date, 1) === sorted[i].date) {
+      run++;
+      if (run > longestStreak) longestStreak = run;
+    } else {
+      run = 1;
+    }
+  }
+
+  return { streak, longestStreak, closestEver, totalPlays, averageDistance };
 }

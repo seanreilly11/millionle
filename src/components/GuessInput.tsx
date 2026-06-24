@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { formatNumber, parseGuess } from "../engine/format";
 
-export function GuessInput({ onSubmit }: { onSubmit: (guess: number) => void }) {
+export function GuessInput({ onSubmit, loading = false }: { onSubmit: (guess: number) => void; loading?: boolean }) {
   const [raw, setRaw] = useState("");
   const parsed = parseGuess(raw);
   const display =
@@ -36,10 +36,10 @@ export function GuessInput({ onSubmit }: { onSubmit: (guess: number) => void }) 
       </div>
       <button
         className="mt-2 w-full rounded-2xl py-5 font-num font-extrabold text-lg tracking-wide text-white bg-signal shadow-cta disabled:opacity-45 disabled:cursor-not-allowed disabled:shadow-none"
-        disabled={parsed === null}
-        onClick={() => parsed !== null && onSubmit(parsed)}
+        disabled={parsed === null || loading}
+        onClick={() => parsed !== null && !loading && onSubmit(parsed)}
       >
-        Lock in guess
+        {loading ? "Locking in…" : "Lock in guess"}
       </button>
     </>
   );

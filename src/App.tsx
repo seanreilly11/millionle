@@ -3,13 +3,13 @@ import { getApi } from "./api/client";
 import { MILLIONLE } from "./game.config";
 import { localDate, puzzleNumber } from "./engine/date";
 import { getUuid, getName, setName } from "./store/identity";
-import { findByDate } from "./store/history";
 import type { GuessResponse, LeaderboardEntry } from "./api/types";
 import { IdleScreen } from "./screens/IdleScreen";
 import { ResultScreen } from "./screens/ResultScreen";
 import { Leaderboard } from "./components/Leaderboard";
 import { AppShell } from "./components/AppShell";
 import { GameHeader } from "./components/GameHeader";
+import { InitLoader } from "./components/InitLoader";
 
 type Phase = "idle" | "result" | "joined";
 const offset = () => -new Date().getTimezoneOffset();
@@ -21,22 +21,26 @@ export default function App() {
   const [guess, setGuess] = useState(0);
   const [board, setBoard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState(true);
 
   const date = localDate(offset());
   const puzzle = puzzleNumber(MILLIONLE.launch, date);
 
-  // Revisit: if today's guess already exists, recover the result state.
+  // On load, check the server for today's result (works across devices).
   useEffect(() => {
-    const existing = findByDate(date);
-    if (existing && !result) {
-      setGuess(existing.guess);
-      api
-        .guess({ uuid: getUuid(), guess: existing.guess, offset: offset() })
-        .then((r) => {
-          setResult(r);
-          setPhase("result");
-        });
+    async function checkExisting() {
+      const [r] = await Promise.all([
+        api.result({ uuid: getUuid(), offset: offset() }),
+        new Promise<void>((resolve) => setTimeout(resolve, 1000)),
+      ]);
+      if (r.played) {
+        setGuess(r.guess);
+        setResult(r);
+        setPhase("result");
+      }
+      setInitializing(false);
     }
+    checkExisting();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -53,6 +57,7 @@ export default function App() {
     setName(name);
     await api.submitName({ uuid: getUuid(), name, offset: offset() });
     await loadLeaderboard();
+    setResult((r) => r ? { ...r, hasJoined: true } : r);
   }
 
   async function loadLeaderboard() {
@@ -61,8 +66,12 @@ export default function App() {
     setPhase("joined");
   }
 
+  if (initializing) return <InitLoader />;
+
   if (phase === "idle")
-    return <IdleScreen puzzle={puzzle} onGuess={handleGuess} />;
+    return (
+      <IdleScreen puzzle={puzzle} onGuess={handleGuess} loading={loading} />
+    );
 
   if (phase === "joined" && result) {
     return (
