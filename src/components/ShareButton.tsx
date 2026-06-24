@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { formatNumber } from "../engine/format";
 
 export function ShareButton({
   puzzle,
@@ -14,7 +15,7 @@ export function ShareButton({
   const text =
     distance === 0
       ? `I got it! 🎯 MILLIONLE No.${puzzle}\n${window.location.origin}`
-      : `I didn't get it :( MILLIONLE No.${puzzle}\n${window.location.origin}`;
+      : `I didn't get it :( MILLIONLE No.${puzzle}\nOff by ${formatNumber(distance)}\n${window.location.origin}`;
 
   async function handleShare() {
     if (navigator.share && navigator.maxTouchPoints > 0) {
