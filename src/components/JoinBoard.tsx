@@ -10,6 +10,7 @@ export function JoinBoard({ defaultName, onJoin }: { defaultName: string; onJoin
         <input
           className="flex-1 border-2 border-line2 rounded-xl bg-card2 px-3.5 py-3 font-semibold text-base text-ink font-num"
           aria-label="Your name"
+          placeholder="Your name"
           value={name}
           maxLength={20}
           onChange={(e) => setName(e.target.value)}
