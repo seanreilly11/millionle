@@ -48,3 +48,18 @@ describe('computeStats extended fields', () => {
     expect(s.longestStreak).toBe(2)
   })
 })
+
+describe("computeStats edge cases", () => {
+  test("empty rows returns all zeros", () => {
+    const s = computeStats([], "2026-06-24");
+    expect(s).toEqual({ streak: 0, longestStreak: 0, closestEver: 0, totalPlays: 0, averageDistance: 0 });
+  });
+
+  test("single play has longestStreak of 1", () => {
+    const s = computeStats([{ date: "2026-06-24", distance: 500 }], "2026-06-24");
+    expect(s.streak).toBe(1);
+    expect(s.longestStreak).toBe(1);
+    expect(s.totalPlays).toBe(1);
+    expect(s.averageDistance).toBe(500);
+  });
+});
