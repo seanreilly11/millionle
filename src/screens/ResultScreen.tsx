@@ -47,7 +47,7 @@ export function ResultScreen({
     <AppShell>
       <GameHeader puzzle={result.puzzle} />
 
-      <div className="mt-4">
+      <section aria-label="Today's result" className="mt-4">
         <MonoLabel tracking="tracking-label-lg">The answer</MonoLabel>
         <ScoreCounter value={result.answer} />
         <div className="mt-5">
@@ -57,12 +57,14 @@ export function ResultScreen({
         <div className="mt-4">
           <DistanceBadge distance={result.distance} />
         </div>
-      </div>
+      </section>
 
       <OddsRail guess={guess} answer={result.answer} />
 
       <div className="mt-6 text-sm text-steel">
-        You'd sit at <b className="text-ink font-extrabold text-base">#{formatNumber(result.rank)}</b> on today's board.
+        {result.hasJoined ? "You're" : "You'd sit at"}{" "}
+        <b className="text-ink font-extrabold text-base">#{formatNumber(result.rank)}</b>
+        {" "}on today's board.
       </div>
 
       <StatChips stats={result.stats} />

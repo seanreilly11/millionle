@@ -20,9 +20,9 @@ export function WinCelebration({ rank }: { rank: number }) {
       <div className="font-mono font-bold text-sm tracking-heading uppercase text-gold-deep text-center">
         ★ One in a million ★
       </div>
-      <div className="win-number text-center text-win font-black leading-none my-1.5">
+      <h2 className="win-number text-center text-win font-black leading-none my-1.5">
         {formatNumber(1_000_000)}
-      </div>
+      </h2>
       <div className="text-center font-mono text-xs tracking-label uppercase text-gold-deep mt-2">
         Dead on
       </div>

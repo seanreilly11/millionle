@@ -32,7 +32,7 @@ export function JoinBoard({ defaultName, onJoin }: { defaultName: string; onJoin
         </DarkButton>
       </div>
       {error && (
-        <p className="mt-2 text-xs font-mono text-hot">{error}</p>
+        <p role="alert" className="mt-2 text-xs font-mono text-hot">{error}</p>
       )}
     </div>
   );

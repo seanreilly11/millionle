@@ -24,8 +24,10 @@ export function GuessInput({ onSubmit, loading = false }: { onSubmit: (guess: nu
       <div className="inline-flex items-center gap-2 px-1.5 pb-3 border-b-2 border-signal">
         <input
           className="guess-input font-num text-display font-extrabold tracking-tight text-ink w-full text-center tabular-nums"
+          type="text"
           aria-label="Your one guess"
           inputMode="numeric"
+          autoComplete="off"
           placeholder="412,769"
           value={display}
           onChange={handleChange}
@@ -35,7 +37,7 @@ export function GuessInput({ onSubmit, loading = false }: { onSubmit: (guess: nu
         />
       </div>
       <button
-        className="mt-2 w-full rounded-2xl py-5 font-num font-extrabold text-lg tracking-wide text-white bg-signal shadow-cta disabled:opacity-45 disabled:cursor-not-allowed disabled:shadow-none"
+        className="mt-2 w-full rounded-2xl py-5 font-num font-extrabold text-lg tracking-wide text-white bg-signal shadow-cta disabled:opacity-45 disabled:cursor-not-allowed disabled:shadow-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:outline-none"
         disabled={parsed === null || loading}
         onClick={() => parsed !== null && !loading && onSubmit(parsed)}
       >

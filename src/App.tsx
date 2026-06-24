@@ -78,7 +78,7 @@ export default function App() {
       <AppShell>
         <GameHeader puzzle={result.puzzle} suffix="on the board" />
         <button
-          className="mt-3 bg-transparent text-steel font-mono text-xs tracking-wide p-0 text-left hover:text-ink border-none"
+          className="mt-3 bg-transparent text-steel font-mono text-xs tracking-wide py-3 -mx-2 px-2 text-left hover:text-ink border-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:outline-none rounded"
           onClick={() => setPhase("result")}
         >
           ← Back to result
@@ -100,5 +100,5 @@ export default function App() {
     );
   }
 
-  return <AppShell aria-busy={loading} />;
+  return <AppShell aria-busy={loading}><span className="sr-only">Loading…</span></AppShell>;
 }
