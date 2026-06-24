@@ -3,7 +3,6 @@ import { getApi } from "./api/client";
 import { MILLIONLE } from "./game.config";
 import { localDate, puzzleNumber } from "./engine/date";
 import { getUuid, getName, setName } from "./store/identity";
-import { findByDate } from "./store/history";
 import type { GuessResponse, LeaderboardEntry } from "./api/types";
 import { IdleScreen } from "./screens/IdleScreen";
 import { ResultScreen } from "./screens/ResultScreen";
@@ -25,18 +24,17 @@ export default function App() {
   const date = localDate(offset());
   const puzzle = puzzleNumber(MILLIONLE.launch, date);
 
-  // Revisit: if today's guess already exists, recover the result state.
+  // On load, check the server for today's result (works across devices).
   useEffect(() => {
-    const existing = findByDate(date);
-    if (existing && !result) {
-      setGuess(existing.guess);
-      api
-        .guess({ uuid: getUuid(), guess: existing.guess, offset: offset() })
-        .then((r) => {
-          setResult(r);
-          setPhase("result");
-        });
+    async function checkExisting() {
+      const r = await api.result({ uuid: getUuid(), offset: offset() });
+      if (r.played) {
+        setGuess(r.guess);
+        setResult(r);
+        setPhase("result");
+      }
     }
+    checkExisting();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

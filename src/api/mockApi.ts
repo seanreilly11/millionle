@@ -7,6 +7,7 @@ import type {
   LeaderboardRequest,
   LeaderboardResponse,
   LeaderboardEntry,
+  ResultRequest,
 } from "./types";
 import { MILLIONLE } from "../game.config";
 import { answerForDate } from "../engine/answer";
@@ -131,5 +132,30 @@ export const mockApi: GameApi = {
     const entries = myEntry ? [...top10, myEntry] : top10;
 
     return { date, entries, myRank };
+  },
+
+  async result(req: ResultRequest) {
+    await wait();
+    const date = localDate(req.offset);
+    const existing = findByDate(date);
+    if (!existing) return { played: false as const };
+
+    const answer = answerForDate(MILLIONLE, date);
+    const stats = computeStats(
+      readHistory().map((r) => ({ date: r.date, distance: r.distance })),
+      date,
+    );
+    return {
+      played: true as const,
+      guess: existing.guess,
+      distance: existing.distance,
+      answer,
+      rank: rankFor(existing.distance, date),
+      hasJoined: false,
+      tier: tier(existing.distance).id,
+      date,
+      puzzle: puzzleNumber(MILLIONLE.launch, date),
+      stats,
+    };
   },
 };

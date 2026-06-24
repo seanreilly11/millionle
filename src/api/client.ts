@@ -1,4 +1,4 @@
-import type { GameApi, GuessRequest, NameRequest, LeaderboardRequest } from './types'
+import type { GameApi, GuessRequest, NameRequest, LeaderboardRequest, ResultRequest } from './types'
 import { mockApi } from './mockApi'
 
 const httpApi: GameApi = {
@@ -29,6 +29,13 @@ const httpApi: GameApi = {
     if (req.date) params.set('date', req.date)
     const res = await fetch(`/api/leaderboard?${params}`)
     if (!res.ok) throw new Error(`/api/leaderboard failed: ${res.status}`)
+    return res.json()
+  },
+
+  async result(req: ResultRequest) {
+    const params = new URLSearchParams({ uuid: req.uuid, offset: String(req.offset) })
+    const res = await fetch(`/api/result?${params}`)
+    if (!res.ok) throw new Error(`/api/result failed: ${res.status}`)
     return res.json()
   },
 }

@@ -28,3 +28,7 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+.agents
+.mcp.json
+.vercel
+.env*

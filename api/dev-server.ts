@@ -8,6 +8,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import guessHandler from "./guess.js";
 import nameHandler from "./name.js";
 import leaderboardHandler from "./leaderboard.js";
+import resultHandler from "./result.js";
 
 const PORT = 3001;
 
@@ -57,9 +58,10 @@ const server = http.createServer(
     };
 
     const path = url.pathname;
-    if (path === "/api/guess") return guessHandler(vReq, vRes);
-    if (path === "/api/name") return nameHandler(vReq, vRes);
+    if (path === "/api/guess")       return guessHandler(vReq, vRes);
+    if (path === "/api/name")        return nameHandler(vReq, vRes);
     if (path === "/api/leaderboard") return leaderboardHandler(vReq, vRes);
+    if (path === "/api/result")      return resultHandler(vReq, vRes);
 
     res.writeHead(404);
     res.end("Not found");
