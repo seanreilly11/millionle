@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { formatNumber } from "../engine/format";
 import { tier } from "../engine/score";
+import { trackEvent } from "../api/trackEvent";
 
 const TIER_EMOJI: Record<string, string> = {
   "dead-on": "🎯",
@@ -31,6 +32,7 @@ export function ShareButton({
       : `I didn't get it :( MILLIONLE No.${puzzle}\n${emoji} ${t.label} · Off by ${formatNumber(distance)}\nmillionle.com`;
 
   async function handleShare() {
+    trackEvent("share", { tier: t.id, distance });
     if (navigator.share && navigator.maxTouchPoints > 0) {
       await navigator.share({ text });
       return;

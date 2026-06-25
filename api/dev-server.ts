@@ -9,6 +9,7 @@ import guessHandler from "./guess.js";
 import nameHandler from "./name.js";
 import leaderboardHandler from "./leaderboard.js";
 import resultHandler from "./result.js";
+import eventHandler from "./event.js";
 
 const PORT = 3001;
 
@@ -62,6 +63,7 @@ const server = http.createServer(
     if (path === "/api/name")        return nameHandler(vReq, vRes);
     if (path === "/api/leaderboard") return leaderboardHandler(vReq, vRes);
     if (path === "/api/result")      return resultHandler(vReq, vRes);
+    if (path === "/api/event")       return eventHandler(vReq, vRes);
 
     res.writeHead(404);
     res.end("Not found");
