@@ -4,6 +4,8 @@ import { formatNumber } from "../engine/format";
 import { tier } from "../engine/score";
 import { trackEvent } from "../api/trackEvent";
 
+const SITE_URL = "https://www.millionle.com";
+
 const TIER_EMOJI: Record<string, string> = {
   "dead-on": "🎯",
   within5: "🔥",
@@ -28,8 +30,8 @@ export function ShareButton({
   const emoji = TIER_EMOJI[t.id];
   const text =
     distance === 0
-      ? `MILLIONLE No.${puzzle}\n${emoji} ${t.label} · ${t.copy}\nmillionle.com`
-      : `I didn't get it :( MILLIONLE No.${puzzle}\n${emoji} ${t.label} · Off by ${formatNumber(distance)}\nmillionle.com`;
+      ? `MILLIONLE No.${puzzle}\n${emoji} ${t.label} · ${t.copy}\n${SITE_URL}`
+      : `I didn't get it :( MILLIONLE No.${puzzle}\n${emoji} ${t.label} · Off by ${formatNumber(distance)}\n${SITE_URL}`;
 
   async function handleShare() {
     trackEvent("share", { tier: t.id, distance });
