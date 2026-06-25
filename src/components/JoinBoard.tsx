@@ -2,7 +2,13 @@ import { useState } from "react";
 import { DarkButton } from "./DarkButton";
 import { isProfane } from "../utils/profanity";
 
-export function JoinBoard({ defaultName, onJoin }: { defaultName: string; onJoin: (name: string) => void }) {
+export function JoinBoard({
+  defaultName,
+  onJoin,
+}: {
+  defaultName: string;
+  onJoin: (name: string) => void;
+}) {
   const [name, setName] = useState(defaultName);
   const [error, setError] = useState("");
   const clean = name.trim().slice(0, 20);
@@ -25,15 +31,28 @@ export function JoinBoard({ defaultName, onJoin }: { defaultName: string; onJoin
           placeholder="Your name"
           value={name}
           maxLength={20}
-          onChange={(e) => { setName(e.target.value); setError(""); }}
+          onChange={(e) => {
+            setName(e.target.value);
+            setError("");
+          }}
         />
         <DarkButton disabled={clean.length === 0} onClick={handleJoin}>
           Join board
         </DarkButton>
       </div>
       {error && (
-        <p role="alert" className="mt-2 text-xs font-mono text-hot">{error}</p>
+        <p role="alert" className="mt-2 text-xs font-mono text-hot">
+          {error}
+        </p>
       )}
+      <p className="mt-2.5 text-xs text-steel leading-relaxed">
+        By adding your score, your name and result will be shown publicly on
+        today's leaderboard. You can ask us to remove it anytime - see our{" "}
+        <a href="/privacy" className="underline hover:text-ink">
+          Privacy Policy
+        </a>
+        .
+      </p>
     </div>
   );
 }

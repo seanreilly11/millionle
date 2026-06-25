@@ -21,6 +21,12 @@ export function IdleScreen({
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
         <GuessInput onSubmit={onGuess} loading={loading} />
       </div>
+      <footer className="text-center space-y-1">
+        <a href="/privacy" className="font-mono text-xs text-steel hover:text-ink tracking-wide">
+          Privacy Policy
+        </a>
+        <p className="font-mono text-xs text-steel">© 2026 Sean Reilly</p>
+      </footer>
     </AppShell>
   );
 }
