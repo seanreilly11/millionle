@@ -3,12 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#eaeef1" />
     <title>Millionle - Daily Number Guessing Game</title>
     <meta
       name="description"
       content="Guess the number from 1 to 1,000,000. One chance per day."
     />
+    <link rel="canonical" href="https://millionle.com/" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -18,12 +21,13 @@
       property="og:description"
       content="Guess the number from 1 to 1,000,000. One chance per day."
     />
-    <meta
-      property="og:image"
-      content="https://millionle.com/og-image.svg"
-    />
+    <meta property="og:image" content="https://millionle.com/og-image.svg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Millionle - Guess the number from 1 to 1,000,000. One chance per day."
+    />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -32,10 +36,26 @@
       name="twitter:description"
       content="Guess the number from 1 to 1,000,000. One chance per day."
     />
+    <meta name="twitter:image" content="https://millionle.com/og-image.svg" />
     <meta
-      name="twitter:image"
-      content="https://millionle.com/og-image.svg"
+      name="twitter:image:alt"
+      content="Millionle - Guess the number from 1 to 1,000,000. One chance per day."
     />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Millionle",
+        "description": "Guess the number from 1 to 1,000,000. One chance per day.",
+        "url": "https://millionle.com",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "image": "https://millionle.com/og-image.svg"
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

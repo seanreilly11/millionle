@@ -1,0 +1,16 @@
+{
+  "name": "Millionle",
+  "short_name": "Millionle",
+  "description": "Guess the number from 1 to 1,000,000. One chance per day.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eaeef1",
+  "theme_color": "#eaeef1",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
