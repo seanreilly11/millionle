@@ -31,7 +31,7 @@ export function ShareButton({
   const text =
     distance === 0
       ? `MILLIONLE No.${puzzle}\n${emoji} ${t.label} · ${t.copy}\n${SITE_URL}`
-      : `I didn't get it :( MILLIONLE No.${puzzle}\n${emoji} ${t.label} · Off by ${formatNumber(distance)}\n${SITE_URL}`;
+      : `I didn't get it :( MILLIONLE No.${puzzle}\n${emoji} ${t.copy} · Off by ${formatNumber(distance)}\n${SITE_URL}`;
 
   async function handleShare() {
     trackEvent("share", { tier: t.id, distance });
