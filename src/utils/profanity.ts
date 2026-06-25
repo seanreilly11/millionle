@@ -6,6 +6,7 @@ const BLOCKED = [
   "fuck", "shit", "cunt", "cock", "dick", "pussy", "ass", "asshole",
   "bitch", "bastard", "twat", "wank", "wanker", "prick", "bollocks",
   "nigger", "nigga", "faggot", "fag", "retard", "slut", "whore",
+  "poop", "sex",
 ];
 
 export function isProfane(name: string): boolean {
