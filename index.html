@@ -9,37 +9,49 @@
     <title>Millionle - Daily Number Guessing Game</title>
     <meta
       name="description"
-      content="Guess the number from 1 to 1,000,000. One chance per day."
+      content="Millionle is a free daily number guessing game. Pick any number from 1 to 1,000,000 — one guess per day. How close can you get? Share your score with friends."
+    />
+    <meta
+      name="keywords"
+      content="millionle, daily number game, number guessing game, daily puzzle, 1 to 1000000, one guess per day, daily game, number puzzle"
     />
     <link rel="canonical" href="https://millionle.com/" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://millionle.com/" />
-    <meta property="og:title" content="Millionle" />
+    <meta
+      property="og:title"
+      content="Millionle — Daily Number Guessing Game"
+    />
     <meta
       property="og:description"
-      content="Guess the number from 1 to 1,000,000. One chance per day."
+      content="Pick any number from 1 to 1,000,000. One guess per day. How close can you get?"
     />
-    <meta property="og:image" content="https://millionle.com/og-image.svg" />
+    <meta property="og:image" content="https://millionle.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="Millionle - Guess the number from 1 to 1,000,000. One chance per day."
+      content="Millionle - Daily number guessing game. Guess from 1 to 1,000,000."
     />
+    <meta property="og:site_name" content="Millionle" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Millionle" />
+    <meta
+      name="twitter:title"
+      content="Millionle — Daily Number Guessing Game"
+    />
     <meta
       name="twitter:description"
-      content="Guess the number from 1 to 1,000,000. One chance per day."
+      content="Pick any number from 1 to 1,000,000. One guess per day. How close can you get?"
     />
-    <meta name="twitter:image" content="https://millionle.com/og-image.svg" />
+    <meta name="twitter:image" content="https://millionle.com/og-image.png" />
     <meta
       name="twitter:image:alt"
-      content="Millionle - Guess the number from 1 to 1,000,000. One chance per day."
+      content="Millionle - Daily number guessing game. Guess from 1 to 1,000,000."
     />
 
     <!-- JSON-LD -->
@@ -48,17 +60,34 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Millionle",
-        "description": "Guess the number from 1 to 1,000,000. One chance per day.",
+        "description": "Millionle is a free daily number guessing game. Pick any number from 1 to 1,000,000 — one guess per day. How close can you get?",
         "url": "https://millionle.com",
         "applicationCategory": "GameApplication",
+        "genre": "Puzzle",
         "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-        "image": "https://millionle.com/og-image.svg"
+        "image": "https://millionle.com/og-image.png",
+        "inLanguage": "en"
       }
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <noscript>
+        <h1>Millionle — Daily Number Guessing Game</h1>
+        <p>
+          Millionle is a free daily number guessing game. Pick any number from 1
+          to 1,000,000 — you get one guess per day. See how close you can get to
+          the secret number and share your score with friends.
+        </p>
+        <p>
+          A new puzzle is available every day. Track your streak, earn points,
+          and compete on the leaderboard.
+        </p>
+        <p>Enable JavaScript to play.</p>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
