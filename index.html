@@ -3,10 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta name="apple-mobile-web-app-title" content="Millionle" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#eaeef1" />
-    <title>Millionle - Daily Number Guessing Game</title>
+    <title>Millionle — Guess a Number 1 to 1,000,000 | One Guess Per Day</title>
     <meta
       name="description"
       content="Millionle is a free daily number guessing game. Pick any number from 1 to 1,000,000 — one guess per day. How close can you get? Share your score with friends."
@@ -37,6 +42,7 @@
       content="Millionle - Daily number guessing game. Guess from 1 to 1,000,000."
     />
     <meta property="og:site_name" content="Millionle" />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -58,36 +64,108 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
+        "@type": ["WebApplication", "Game"],
         "name": "Millionle",
         "description": "Millionle is a free daily number guessing game. Pick any number from 1 to 1,000,000 — one guess per day. How close can you get?",
-        "url": "https://millionle.com",
+        "url": "https://millionle.com/",
         "applicationCategory": "GameApplication",
-        "genre": "Puzzle",
-        "operatingSystem": "Any",
         "browserRequirements": "Requires JavaScript",
-        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-        "image": "https://millionle.com/og-image.png",
-        "inLanguage": "en"
+        "inLanguage": "en-US",
+        "datePublished": "2026-06-23",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://millionle.com/og-image.png",
+          "width": 1200,
+          "height": 630
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "url": "https://millionle.com/"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "Sean Reilly"
+        },
+        "numberOfPlayers": {
+          "@type": "QuantitativeValue",
+          "minValue": 1,
+          "maxValue": 1
+        },
+        "featureList": [
+          "Daily puzzle",
+          "One guess per day",
+          "Proximity scoring",
+          "Daily leaderboard",
+          "Streak tracking",
+          "Free to play"
+        ],
+        "keywords": "daily number game, number guessing game, daily puzzle, millionle"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Millionle",
+        "url": "https://millionle.com/"
       }
     </script>
   </head>
   <body>
-    <div id="root">
-      <noscript>
-        <h1>Millionle — Daily Number Guessing Game</h1>
-        <p>
-          Millionle is a free daily number guessing game. Pick any number from 1
-          to 1,000,000 — you get one guess per day. See how close you can get to
-          the secret number and share your score with friends.
-        </p>
-        <p>
-          A new puzzle is available every day. Track your streak, earn points,
-          and compete on the leaderboard.
-        </p>
-        <p>Enable JavaScript to play.</p>
-      </noscript>
-    </div>
+    <div id="root"></div>
+    <noscript>
+      <h1>Millionle — Daily Number Guessing Game</h1>
+      <p>
+        Millionle is a free daily number guessing game. Each day, a secret
+        number between 1 and 1,000,000 is chosen. You get exactly one guess.
+        After guessing, you see how far off you were — scored by distance from
+        the answer. A new puzzle launches every day at midnight, and the same
+        number is used for all players worldwide.
+      </p>
+
+      <h2>How to Play</h2>
+      <p>
+        Pick any whole number from 1 to 1,000,000 and submit it as your single
+        guess for the day. There is no higher/lower feedback — instead, your
+        score is based on how close your guess was to the secret number. The
+        closer you are, the better your tier. Come back the next day for a brand
+        new puzzle.
+      </p>
+
+      <h2>Scoring Tiers</h2>
+      <ul>
+        <li><strong>Dead on</strong> — exact match. One in a million.</li>
+        <li><strong>Within 5</strong> — off by 5 or fewer. Breathtaking.</li>
+        <li><strong>Within 100</strong> — off by 100 or fewer. Razor close.</li>
+        <li>
+          <strong>Within 2,500</strong> — off by 2,500 or fewer. Dialed in.
+        </li>
+        <li>
+          <strong>Within 50,000</strong> — off by 50,000 or fewer. Solid read.
+        </li>
+        <li>
+          <strong>Within 250,000</strong> — off by 250,000 or fewer. In the
+          zone.
+        </li>
+        <li>
+          <strong>Off the mark</strong> — more than 250,000 away. Not today.
+        </li>
+      </ul>
+
+      <h2>Features</h2>
+      <ul>
+        <li>One guess per day — makes every choice count</li>
+        <li>Daily leaderboard — see how you rank against other players</li>
+        <li>Streak tracking — keep your daily streak alive</li>
+        <li>Share your score — copy your result and challenge friends</li>
+        <li>Free to play — no account required</li>
+      </ul>
+
+      <p>Enable JavaScript to play Millionle.</p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

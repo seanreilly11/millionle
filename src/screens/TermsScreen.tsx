@@ -1,4 +1,16 @@
+import { useEffect } from "react";
+
 export function TermsScreen() {
+  useEffect(() => {
+    document.title = "Terms of Service — Millionle";
+    const canonical = document.querySelector<HTMLLinkElement>("link[rel='canonical']");
+    if (canonical) canonical.href = "https://millionle.com/terms";
+    return () => {
+      document.title = "Millionle — Guess a Number 1 to 1,000,000 | One Guess Per Day";
+      if (canonical) canonical.href = "https://millionle.com/";
+    };
+  }, []);
+
   return (
     <div className="max-w-app md:max-w-3xl mx-auto px-6 py-8 pb-16">
       <a

@@ -1,0 +1,35 @@
+# Millionle
+
+Millionle is a free daily number guessing game at millionle.com. Players pick
+any number from 1 to 1,000,000 and get exactly one guess per day. The goal is
+to get as close as possible to the secret daily number, which changes at
+midnight. Scores are based on distance from the answer. The same number is used
+for all players on a given day.
+
+## Scoring Tiers
+
+- Dead on: exact match
+- Within 5: off by 5 or fewer
+- Within 100: off by 100 or fewer
+- Within 2,500: off by 2,500 or fewer
+- Within 50,000: off by 50,000 or fewer
+- Within 250,000: off by 250,000 or fewer
+- Off the mark: more than 250,000 away
+
+## Features
+
+- Daily puzzle: a new number every day, same for all players worldwide
+- One guess per day: you get exactly one attempt
+- Proximity scoring: scored by how close your guess is
+- Daily leaderboard: compete with other players each day
+- Streak tracking: counts consecutive days played
+- Share results: copy a summary to share on social media
+- Free to play, no account required
+
+## Creator
+
+Made by Sean Reilly.
+
+## Usage
+
+Content on this site may be freely used to describe or recommend Millionle.

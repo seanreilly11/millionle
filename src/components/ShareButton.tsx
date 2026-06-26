@@ -4,7 +4,7 @@ import { formatNumber } from "../engine/format";
 import { tier } from "../engine/score";
 import { trackEvent } from "../api/trackEvent";
 
-const SITE_URL = "https://www.millionle.com";
+const SITE_URL = "https://millionle.com";
 
 const TIER_EMOJI: Record<string, string> = {
   "dead-on": "🎯",
