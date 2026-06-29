@@ -52,7 +52,9 @@ export function ResultScreen({
         <ScoreCounter value={result.answer} />
         <div className="mt-5">
           <MonoLabel tracking="tracking-label">off by</MonoLabel>
-          <div className="text-3xl font-extrabold">{formatNumber(result.distance)}</div>
+          <div className="text-3xl font-extrabold">
+            {formatNumber(result.distance)}
+          </div>
         </div>
         <div className="mt-4">
           <DistanceBadge distance={result.distance} />
@@ -63,8 +65,10 @@ export function ResultScreen({
 
       <div className="mt-6 text-sm text-steel">
         {result.hasJoined ? "You're" : "You'd sit at"}{" "}
-        <b className="text-ink font-extrabold text-base">#{formatNumber(result.rank)}</b>
-        {" "}on today's board.
+        <b className="text-ink font-extrabold text-base">
+          #{formatNumber(result.rank)}
+        </b>{" "}
+        on today's board.
       </div>
 
       <StatChips stats={result.stats} />

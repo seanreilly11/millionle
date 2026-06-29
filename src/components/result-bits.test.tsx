@@ -8,7 +8,7 @@ import { JoinBoard } from "./JoinBoard";
 describe("result bits", () => {
   test("DistanceBadge shows the tier label", () => {
     render(<DistanceBadge distance={47231} />);
-    expect(screen.getByText(/within 50k/i)).toBeInTheDocument();
+    expect(screen.getByText(/solid read/i)).toBeInTheDocument();
   });
   test("StatChips show streak and closest ever", () => {
     render(<StatChips stats={{ streak: 7, closestEver: 312, longestStreak: 7, totalPlays: 14, averageDistance: 1500 }} />);

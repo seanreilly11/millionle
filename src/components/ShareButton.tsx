@@ -1,20 +1,8 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { formatNumber } from "../engine/format";
-import { tier } from "../engine/score";
+import { buildShare } from "../engine/copy";
 import { trackEvent } from "../api/trackEvent";
-
-const SITE_URL = "https://millionle.com";
-
-const TIER_EMOJI: Record<string, string> = {
-  "dead-on": "🎯",
-  within5: "🔥",
-  within100: "⚡",
-  within2500: "💡",
-  within50k: "📍",
-  within250k: "🌡️",
-  beyond: "❄️",
-};
+import { getTier } from "../engine/copy";
 
 export function ShareButton({
   puzzle,
@@ -26,15 +14,9 @@ export function ShareButton({
 }) {
   const [copied, setCopied] = useState(false);
 
-  const t = tier(distance);
-  const emoji = TIER_EMOJI[t.id];
-  const text =
-    distance === 0
-      ? `MILLIONLE No.${puzzle}\n${emoji} ${t.label} · ${t.copy}\n${SITE_URL}`
-      : `I didn't get it :( MILLIONLE No.${puzzle}\n${emoji} ${t.copy} · Off by ${formatNumber(distance)}\n${SITE_URL}`;
-
   async function handleShare() {
-    trackEvent("share", { tier: t.id, distance });
+    trackEvent("share", { tier: getTier(distance).id, distance });
+    const text = buildShare(distance, puzzle);
     if (navigator.share && navigator.maxTouchPoints > 0) {
       await navigator.share({ text });
       return;
