@@ -4,17 +4,24 @@ import { motion } from "motion/react";
 import { formatNumber } from "../engine/format";
 import { prefersReducedMotion, BOUNCY } from "../lib/motion";
 
+const CONFETTI_DELAY_MS = 150; // let the win-number pop-in land before the burst starts
+
 export function WinCelebration({ rank }: { rank: number }) {
   useEffect(() => {
     if (prefersReducedMotion()) return;
+    let cancelled = false;
     const start = setTimeout(() => {
       const end = Date.now() + 1200;
       (function frame() {
+        if (cancelled) return;
         confetti({ particleCount: 5, spread: 70, origin: { y: 0.3 }, colors: ["#E8920A", "#F4602A", "#0EA896", "#0E1A22"] });
         if (Date.now() < end) requestAnimationFrame(frame);
       })();
-    }, 150);
-    return () => clearTimeout(start);
+    }, CONFETTI_DELAY_MS);
+    return () => {
+      cancelled = true;
+      clearTimeout(start);
+    };
   }, []);
 
   const reduced = prefersReducedMotion();

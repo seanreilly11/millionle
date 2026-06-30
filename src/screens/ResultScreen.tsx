@@ -86,6 +86,13 @@ export function ResultScreen({
         on today's board.
       </div>
 
+      {/*
+        Index 2 is skipped (StatChips uses 3): OddsRail has its own internal
+        stagger (see OddsRail.tsx) and isn't wrapped here, so index 2's delay
+        slot is left for it. This is an approximate stagger reservation, not a
+        verified "settle then next" handoff - the BOUNCY spring's own settle
+        time means these animations overlap in practice, which is fine visually.
+      */}
       <motion.div {...revealProps(3)}>
         <StatChips stats={result.stats} />
       </motion.div>
