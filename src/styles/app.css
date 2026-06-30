@@ -66,6 +66,27 @@
   background: linear-gradient(90deg, rgba(14, 168, 150, 0.25), #0ea896);
 }
 
+/* Choreographed odds rail: idle ring pulse once a pin has settled */
+@keyframes rail-idle-pulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+.rail-idle-pulse::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-signal);
+  opacity: 0;
+  animation: rail-idle-pulse 2000ms ease-out infinite;
+}
+
 /* Init loader */
 @keyframes num-bounce {
   0%,
