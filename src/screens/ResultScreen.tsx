@@ -65,13 +65,13 @@ export function ResultScreen({
         <motion.div {...revealProps(0)}>
           <ScoreCounter value={result.answer} />
         </motion.div>
-        <div className="mt-5">
+        <motion.div className="mt-5" {...revealProps(1)}>
           <MonoLabel tracking="tracking-label">off by</MonoLabel>
           <div className="text-3xl font-extrabold">
             {formatNumber(result.distance)}
           </div>
-        </div>
-        <motion.div className="mt-4" {...revealProps(1)}>
+        </motion.div>
+        <motion.div className="mt-4" {...revealProps(2)}>
           <DistanceBadge distance={result.distance} />
         </motion.div>
       </section>
@@ -87,13 +87,13 @@ export function ResultScreen({
       </div>
 
       {/*
-        Index 2 is skipped (StatChips uses 3): OddsRail has its own internal
-        stagger (see OddsRail.tsx) and isn't wrapped here, so index 2's delay
+        Index 3 is skipped (StatChips uses 4): OddsRail has its own internal
+        stagger (see OddsRail.tsx) and isn't wrapped here, so index 3's delay
         slot is left for it. This is an approximate stagger reservation, not a
         verified "settle then next" handoff - the BOUNCY spring's own settle
         time means these animations overlap in practice, which is fine visually.
       */}
-      <motion.div {...revealProps(3)}>
+      <motion.div {...revealProps(4)}>
         <StatChips stats={result.stats} />
       </motion.div>
       <ShareButton
