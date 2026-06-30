@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { animate } from "motion";
 import { formatNumber } from "../engine/format";
-
-const prefersReduced = () =>
-  typeof matchMedia === "undefined" ||
-  matchMedia("(prefers-reduced-motion: reduce)").matches;
+import { prefersReducedMotion } from "../lib/motion";
 
 export function ScoreCounter({
   value,
@@ -13,10 +10,10 @@ export function ScoreCounter({
   value: number;
   className?: string;
 }) {
-  const [shown, setShown] = useState(prefersReduced() ? value : 0);
+  const [shown, setShown] = useState(prefersReducedMotion() ? value : 0);
 
   useEffect(() => {
-    if (prefersReduced()) {
+    if (prefersReducedMotion()) {
       setShown(value);
       return;
     }

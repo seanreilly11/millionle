@@ -1,13 +1,11 @@
 import { useEffect } from "react";
 import confetti from "canvas-confetti";
 import { formatNumber } from "../engine/format";
-
-const prefersReduced = () =>
-  typeof matchMedia === "undefined" || matchMedia("(prefers-reduced-motion: reduce)").matches;
+import { prefersReducedMotion } from "../lib/motion";
 
 export function WinCelebration({ rank }: { rank: number }) {
   useEffect(() => {
-    if (prefersReduced()) return;
+    if (prefersReducedMotion()) return;
     const end = Date.now() + 1200;
     (function frame() {
       confetti({ particleCount: 5, spread: 70, origin: { y: 0.3 }, colors: ["#E8920A", "#F4602A", "#0EA896", "#0E1A22"] });
