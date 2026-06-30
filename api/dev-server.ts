@@ -1,4 +1,4 @@
-// Local development server — bridges Vite's dev server to the API handlers.
+// Local development server - bridges Vite's dev server to the API handlers.
 // Run via: npm run dev:api
 // Vite proxies /api/* to http://localhost:3001
 import http from "node:http";
@@ -59,11 +59,11 @@ const server = http.createServer(
     };
 
     const path = url.pathname;
-    if (path === "/api/guess")       return guessHandler(vReq, vRes);
-    if (path === "/api/name")        return nameHandler(vReq, vRes);
+    if (path === "/api/guess") return guessHandler(vReq, vRes);
+    if (path === "/api/name") return nameHandler(vReq, vRes);
     if (path === "/api/leaderboard") return leaderboardHandler(vReq, vRes);
-    if (path === "/api/result")      return resultHandler(vReq, vRes);
-    if (path === "/api/event")       return eventHandler(vReq, vRes);
+    if (path === "/api/result") return resultHandler(vReq, vRes);
+    if (path === "/api/event") return eventHandler(vReq, vRes);
 
     res.writeHead(404);
     res.end("Not found");

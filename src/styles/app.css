@@ -33,16 +33,24 @@
   }
 }
 
-/* Placeholder — no Tailwind utility for this */
+/* Placeholder - no Tailwind utility for this */
 .guess-input::placeholder {
   color: #aebdc4;
 }
 
-/* Win screen radial gradient — too complex for standard utilities */
+/* Win screen radial gradient - too complex for standard utilities */
 .win-bg {
   background:
-    radial-gradient(120% 60% at 50% 0%, rgba(232, 146, 10, 0.34), transparent 55%),
-    radial-gradient(95% 40% at 50% 102%, rgba(244, 96, 42, 0.2), transparent 60%);
+    radial-gradient(
+      120% 60% at 50% 0%,
+      rgba(232, 146, 10, 0.34),
+      transparent 55%
+    ),
+    radial-gradient(
+      95% 40% at 50% 102%,
+      rgba(244, 96, 42, 0.2),
+      transparent 60%
+    );
 }
 
 /* Gradient text for the 1,000,000 win number */
@@ -53,15 +61,21 @@
   color: transparent;
 }
 
-/* Rail fill gradient — positioned via inline style, color via class */
+/* Rail fill gradient - positioned via inline style, color via class */
 .rail-fill {
   background: linear-gradient(90deg, rgba(14, 168, 150, 0.25), #0ea896);
 }
 
 /* Init loader */
 @keyframes num-bounce {
-  0%, 55%, 100% { top: 0; }
-  28%           { top: -12px; }
+  0%,
+  55%,
+  100% {
+    top: 0;
+  }
+  28% {
+    top: -12px;
+  }
 }
 .loader-bounce-char {
   position: relative;

@@ -1,13 +1,17 @@
 import { useEffect } from "react";
+import { SITE_URL } from "../game.config";
 
 export function PrivacyScreen() {
   useEffect(() => {
-    document.title = "Privacy Policy — Millionle";
-    const canonical = document.querySelector<HTMLLinkElement>("link[rel='canonical']");
-    if (canonical) canonical.href = "https://millionle.com/privacy";
+    document.title = "Privacy Policy - Millionle";
+    const canonical = document.querySelector<HTMLLinkElement>(
+      "link[rel='canonical']",
+    );
+    if (canonical) canonical.href = `${SITE_URL}privacy`;
     return () => {
-      document.title = "Millionle — Guess a Number 1 to 1,000,000 | One Guess Per Day";
-      if (canonical) canonical.href = "https://millionle.com/";
+      document.title =
+        "Millionle - Guess a Number 1 to 1,000,000 | One Guess Per Day";
+      if (canonical) canonical.href = SITE_URL;
     };
   }, []);
 
@@ -166,7 +170,7 @@ export function PrivacyScreen() {
             ["Submitting a guess", "Your guess (a number)"],
             ["Joining the leaderboard", "Your chosen display name"],
             ["Viewing the leaderboard", "The relevant puzzle date"],
-            ["Retrieving your result", "—"],
+            ["Retrieving your result", "-"],
             [
               "Gameplay events",
               "Event name, user-agent string, mobile/desktop indicator, platform, browser language, and network connection type",
@@ -220,17 +224,17 @@ export function PrivacyScreen() {
             [
               "Random identifier and gameplay data (guess, score, streak, time-zone offset)",
               "To operate the Game, deliver the correct daily puzzle, enforce one guess per day, and calculate your statistics",
-              "Legitimate interests (Art. 6(1)(f)) — necessary to provide the core service you have requested",
+              "Legitimate interests (Art. 6(1)(f)) - necessary to provide the core service you have requested",
             ],
             [
               "Display name",
               "To publish your name alongside your score on the public leaderboard",
-              "Consent (Art. 6(1)(a)) — you actively choose to enter and submit a name",
+              "Consent (Art. 6(1)(a)) - you actively choose to enter and submit a name",
             ],
             [
               "Event and device data (user-agent, platform, language, network type)",
               "To understand how the Game is used and to maintain and improve it",
-              "Legitimate interests (Art. 6(1)(f)) — analysing usage to operate and improve the service",
+              "Legitimate interests (Art. 6(1)(f)) - analysing usage to operate and improve the service",
             ],
           ]}
         />
@@ -304,9 +308,9 @@ export function PrivacyScreen() {
 
       <Section id="9" title="Data retention">
         <P>
-          We retain the gameplay records stored in our database — including your
+          We retain the gameplay records stored in our database - including your
           random identifier, guesses, scores, display name, time-zone offset,
-          and event/device data — for an indefinite period, in order to maintain
+          and event/device data - for an indefinite period, in order to maintain
           the integrity and history of the Game and its leaderboards.
         </P>
         <P>
@@ -328,32 +332,32 @@ export function PrivacyScreen() {
         </P>
         <ul className="list-disc pl-5 space-y-1 text-sm text-ink mb-4">
           <li>
-            <strong>Right of access</strong> (Art. 15) — to obtain confirmation
+            <strong>Right of access</strong> (Art. 15) - to obtain confirmation
             of whether we process your data and a copy of that data
           </li>
           <li>
-            <strong>Right to rectification</strong> (Art. 16) — to have
+            <strong>Right to rectification</strong> (Art. 16) - to have
             inaccurate data corrected, including your leaderboard display name
           </li>
           <li>
-            <strong>Right to erasure</strong> (Art. 17) — to have your data
+            <strong>Right to erasure</strong> (Art. 17) - to have your data
             deleted
           </li>
           <li>
-            <strong>Right to restriction of processing</strong> (Art. 18) — to
+            <strong>Right to restriction of processing</strong> (Art. 18) - to
             limit how we process your data in certain circumstances
           </li>
           <li>
-            <strong>Right to data portability</strong> (Art. 20) — to receive
+            <strong>Right to data portability</strong> (Art. 20) - to receive
             data you have provided to us, where processing is based on consent
             or contract
           </li>
           <li>
-            <strong>Right to object</strong> (Art. 21) — to object to processing
+            <strong>Right to object</strong> (Art. 21) - to object to processing
             carried out on the basis of our legitimate interests
           </li>
           <li>
-            <strong>Right to withdraw consent</strong> (Art. 7(3)) — to withdraw
+            <strong>Right to withdraw consent</strong> (Art. 7(3)) - to withdraw
             consent at any time where processing is based on it
           </li>
         </ul>
@@ -523,7 +527,7 @@ function SubProcessor({
   return (
     <div className="text-sm text-ink leading-relaxed">
       <span className="font-semibold">{name}</span>{" "}
-      <span className="text-steel">— {role}.</span> {children}
+      <span className="text-steel">- {role}.</span> {children}
     </div>
   );
 }

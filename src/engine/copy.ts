@@ -1,4 +1,5 @@
 import { formatNumber } from "./format";
+import { SITE_URL_SHORT } from "../game.config";
 
 interface CopyTier {
   id: string;
@@ -10,9 +11,9 @@ interface CopyTier {
 }
 
 export const millionleCopy = {
-  url: "millionle.com",
+  url: SITE_URL_SHORT,
 
-  // Share output shape:  `MILLIONLE No.{n}\n{emoji} {line}\nmillionle.com`
+  // Share output shape:  `MILLIONLE No.{n}\n{emoji} {line}\n{url}`
   template: "MILLIONLE No.{n}\n{emoji} {line}\n{url}",
 
   tiers: [
@@ -28,7 +29,7 @@ export const millionleCopy = {
       ],
       share: [
         "I GUESSED IT. The exact number, one in a million, on one try. Good luck beating that.",
-        "I just won. Nailed it on a single guess. This will never happen again — beat that (you can't):",
+        "I just won. Nailed it on a single guess. This will never happen again - beat that (you can't):",
         "One guess. One in a million. I got it. Retiring as champion.",
       ],
     },
@@ -53,9 +54,9 @@ export const millionleCopy = {
       label: "So close",
       max: 99,
       emoji: ["😖", "😣", "🥲"],
-      inGame: ["So close.", "Off by {d} — within a hair.", "Achingly close."],
+      inGame: ["So close.", "Off by {d} - within a hair.", "Achingly close."],
       share: [
-        "Off by {d}. Out of a MILLION. I was THIS close. One guess — beat that?",
+        "Off by {d}. Out of a MILLION. I was THIS close. One guess - beat that?",
         "{d} away. I'll never be that close again. Try it:",
       ],
     },
@@ -190,7 +191,7 @@ export const millionleCopy = {
       share: [
         "Off by {d}. How do you even MANAGE that? A million options and I found the worst one.",
         "{d} away. I'd have done better guessing with my eyes shut. Beat my incompetence:",
-        "Off by {d}. I'd have to TRY to be this wrong — and I didn't even try.",
+        "Off by {d}. I'd have to TRY to be this wrong - and I didn't even try.",
         "Off by {d}. That's not a guess, it's a cry for help. Can you embarrass yourself less?",
       ],
     },

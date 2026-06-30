@@ -19,7 +19,7 @@ export function IdleScreen({
           One hidden number,{" "}
           <b className="text-ink font-semibold">1 to 1,000,000</b>.
         </p>
-        <p>One guess — can you get it?</p>
+        <p>One guess - can you get it?</p>
       </div>
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
         <GuessInput onSubmit={onGuess} loading={loading} />

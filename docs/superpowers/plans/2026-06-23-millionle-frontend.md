@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the complete playable Millionle frontend — idle → guess → reveal → result(win/loss) → join → leaderboard — running on a mock engine backed by `localStorage` that mirrors the future server API exactly.
+**Goal:** Build the complete playable Millionle frontend - idle → guess → reveal → result(win/loss) → join → leaderboard - running on a mock engine backed by `localStorage` that mirrors the future server API exactly.
 
 **Architecture:** Pure isomorphic `engine/` (PRNG, scoring, dates, formatting) is consumed by a `mockApi` behind a `GameApi` interface (the seam). UI is a single-route state machine; the real backend later = add `httpApi.ts` and flip one line in `getApi()`.
 
@@ -11,6 +11,7 @@
 **Spec:** `docs/superpowers/specs/2026-06-23-millionle-design.md`
 
 **Conventions:**
+
 - Commit messages: Conventional Commits. **No `Co-Authored-By` trailer.**
 - TDD for all `engine/`, `api/`, `store/` logic: failing test first.
 - All numbers display with thousands separators via `formatNumber`.
@@ -55,9 +56,10 @@ Delete the scaffold `src/App.css`. Replace `src/index.css` content with an impor
 
 ---
 
-## Task 1: Tooling — Vitest, Testing Library, animation deps
+## Task 1: Tooling - Vitest, Testing Library, animation deps
 
 **Files:**
+
 - Modify: `package.json`
 - Create: `src/test/setup.ts`
 - Modify: `vite.config.ts`
@@ -65,6 +67,7 @@ Delete the scaffold `src/App.css`. Replace `src/index.css` content with an impor
 - [ ] **Step 1: Install dependencies**
 
 Run:
+
 ```bash
 npm i motion canvas-confetti
 npm i -D vitest @vitest/coverage-v8 jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event @types/canvas-confetti
@@ -73,6 +76,7 @@ npm i -D vitest @vitest/coverage-v8 jsdom @testing-library/react @testing-librar
 - [ ] **Step 2: Add test scripts to `package.json`**
 
 In the `"scripts"` block add:
+
 ```json
 "test": "vitest run",
 "test:watch": "vitest"
@@ -94,32 +98,34 @@ afterEach(() => {
 - [ ] **Step 4: Add Vitest config to `vite.config.ts`**
 
 Add the triple-slash reference at the very top of the file and a `test` field to the config object:
+
 ```ts
 /// <reference types="vitest/config" />
-import { defineConfig } from 'vite'
-import react, { reactCompilerPreset } from '@vitejs/plugin-react'
-import babel from '@rolldown/plugin-babel'
+import { defineConfig } from "vite";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    babel({ presets: [reactCompilerPreset()] })
-  ],
+  plugins: [react(), babel({ presets: [reactCompilerPreset()] })],
   test: {
-    environment: 'jsdom',
+    environment: "jsdom",
     globals: true,
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: ["./src/test/setup.ts"],
   },
-})
+});
 ```
 
 - [ ] **Step 5: Sanity test**
 
 Create `src/test/smoke.test.ts`:
+
 ```ts
 import { expect, test } from "vitest";
-test("test runner works", () => { expect(1 + 1).toBe(2); });
+test("test runner works", () => {
+  expect(1 + 1).toBe(2);
+});
 ```
+
 Run: `npm test`
 Expected: 1 passed.
 
@@ -133,9 +139,10 @@ git commit -m "chore: add vitest, testing-library, motion, canvas-confetti"
 
 ---
 
-## Task 2: Theme — token system + global styles
+## Task 2: Theme - token system + global styles
 
 **Files:**
+
 - Create: `src/styles/app.css`
 - Modify: `src/index.css` (replace contents)
 - Delete: `src/App.css`
@@ -145,100 +152,480 @@ Port the approved visual from `.superpowers/brainstorm/111-1782241494/content/ar
 - [ ] **Step 1: Create `src/styles/app.css`**
 
 ```css
-:root{
-  --paper:#EAEEF1;--card:#FFFFFF;--card2:#F4F7F8;--ink:#0E1A22;--steel:#5C7079;
-  --line:rgba(14,26,34,.12);--line2:rgba(14,26,34,.18);
-  --signal:#0EA896;--signal-soft:rgba(14,168,150,.12);
-  --jackpot:#E8920A;--gold-deep:#B8780A;--hot:#F4602A;
-  --num:"Archivo", system-ui, sans-serif;--mono:"Space Mono", ui-monospace, monospace;
+:root {
+  --paper: #eaeef1;
+  --card: #ffffff;
+  --card2: #f4f7f8;
+  --ink: #0e1a22;
+  --steel: #5c7079;
+  --line: rgba(14, 26, 34, 0.12);
+  --line2: rgba(14, 26, 34, 0.18);
+  --signal: #0ea896;
+  --signal-soft: rgba(14, 168, 150, 0.12);
+  --jackpot: #e8920a;
+  --gold-deep: #b8780a;
+  --hot: #f4602a;
+  --num: "Archivo", system-ui, sans-serif;
+  --mono: "Space Mono", ui-monospace, monospace;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body,#root{height:100%}
-body{background:var(--paper);color:var(--ink);font-family:var(--num);
-  -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--num);
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
 
 /* mobile column shell (replaces the .phone frame from the mockup) */
-.app{max-width:430px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;
-  padding:34px 26px 26px;position:relative;overflow:hidden}
+.app {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 34px 26px 26px;
+  position: relative;
+  overflow: hidden;
+}
 
-.mark{font-weight:900;letter-spacing:.01em;font-size:23px;line-height:1}
-.mark .o{color:var(--jackpot)}
-.row{display:flex;align-items:center;justify-content:space-between}
-.puzzle{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--steel);text-transform:uppercase}
-.label{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--steel)}
+.mark {
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  font-size: 23px;
+  line-height: 1;
+}
+.mark .o {
+  color: var(--jackpot);
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.puzzle {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--steel);
+  text-transform: uppercase;
+}
+.label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
 
 /* idle hero */
-.tagc{text-align:center;color:var(--steel);font-size:13px;margin-top:14px;line-height:1.45}
-.tagc b{color:var(--ink);font-weight:600}
-.hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
-.guesslab{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--steel)}
-.guessbox{display:inline-flex;align-items:center;gap:8px;padding:4px 6px 12px;border-bottom:3px solid var(--signal)}
-.guessbox input{font-family:var(--num);font-size:56px;font-weight:800;letter-spacing:-.02em;line-height:1;
-  color:var(--ink);border:none;background:transparent;outline:none;width:100%;text-align:center;
-  font-variant-numeric:tabular-nums}
-.guessbox input::placeholder{color:#AEBDC4}
-.hintc{font-family:var(--mono);font-size:10px;color:var(--steel);letter-spacing:.05em}
-.railmini{width:230px}
-.railmini .track{position:relative;height:5px;border-radius:5px;background:var(--card2);border:1px solid var(--line)}
-.railmini .ends{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--steel);margin-top:8px}
-.cta{margin-top:8px;width:100%;border:none;border-radius:16px;padding:20px;font-family:var(--num);font-weight:800;
-  font-size:17px;letter-spacing:.04em;color:#fff;cursor:pointer;background:var(--signal);
-  box-shadow:0 16px 30px -12px rgba(14,168,150,.6)}
-.cta:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
-.cta:focus-visible,.guessbox input:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
+.tagc {
+  text-align: center;
+  color: var(--steel);
+  font-size: 13px;
+  margin-top: 14px;
+  line-height: 1.45;
+}
+.tagc b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.guesslab {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.guessbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 12px;
+  border-bottom: 3px solid var(--signal);
+}
+.guessbox input {
+  font-family: var(--num);
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--ink);
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.guessbox input::placeholder {
+  color: #aebdc4;
+}
+.hintc {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--steel);
+  letter-spacing: 0.05em;
+}
+.railmini {
+  width: 230px;
+}
+.railmini .track {
+  position: relative;
+  height: 5px;
+  border-radius: 5px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+}
+.railmini .ends {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--steel);
+  margin-top: 8px;
+}
+.cta {
+  margin-top: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 16px;
+  padding: 20px;
+  font-family: var(--num);
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  cursor: pointer;
+  background: var(--signal);
+  box-shadow: 0 16px 30px -12px rgba(14, 168, 150, 0.6);
+}
+.cta:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.cta:focus-visible,
+.guessbox input:focus-visible {
+  outline: 3px solid var(--signal);
+  outline-offset: 3px;
+}
 
 /* result */
-.score{font-size:56px;font-weight:900;line-height:.92;letter-spacing:-.02em;color:var(--ink)}
-.badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
-  text-transform:uppercase;padding:7px 12px;border-radius:999px;margin-top:12px}
-.badge.near{color:#08776a;background:var(--signal-soft);border:1px solid rgba(14,168,150,.32)}
-.rail{margin-top:22px}
-.track{position:relative;height:6px;border-radius:6px;background:var(--card2);border:1px solid var(--line);margin:14px 0 6px}
-.track .ends{position:absolute;inset:0;display:flex;justify-content:space-between;top:14px;font-family:var(--mono);font-size:10px;color:var(--steel)}
-.fill{position:absolute;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,rgba(14,168,150,.25),var(--signal))}
-.pin{position:absolute;top:-6px;width:2px;height:18px;border-radius:2px}
-.pinlab{position:absolute;top:-34px;transform:translateX(-50%);font-family:var(--mono);font-size:10px;white-space:nowrap;letter-spacing:.04em}
-.reveal{margin-top:16px}
-.reveal .k{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel)}
-.reveal .n{font-size:28px;font-weight:800;margin-top:4px}
-.rankline{margin-top:14px;font-size:14px;color:var(--steel)}
-.rankline b{color:var(--ink);font-weight:800;font-size:16px}
-.chips{display:flex;gap:10px;margin-top:16px}
-.chip{flex:1;border:1px solid var(--line);border-radius:13px;padding:11px 12px;background:var(--card2)}
-.chip .k{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel)}
-.chip .v{font-size:22px;font-weight:800;margin-top:3px}
-.statbar{display:flex;align-items:center;justify-content:space-between;margin-top:10px;border:1px solid var(--line);border-radius:13px;padding:12px 14px;background:var(--card2)}
-.statbar .k{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel)}
-.statbar .bv{font-size:20px;font-weight:800;letter-spacing:.01em}
-.join{margin-top:auto;border-top:1px solid var(--line);padding-top:16px}
-.namewrap{display:flex;gap:10px;align-items:stretch;margin-top:10px}
-.namewrap input{flex:1;border:1.5px solid var(--line2);border-radius:13px;background:var(--card2);padding:13px 14px;font-weight:600;font-size:15px;color:var(--ink);font-family:var(--num)}
-.namewrap .go{border:none;border-radius:13px;background:var(--ink);color:#fff;font-weight:800;padding:0 18px;font-size:14px;cursor:pointer}
+.score {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border-radius: 999px;
+  margin-top: 12px;
+}
+.badge.near {
+  color: #08776a;
+  background: var(--signal-soft);
+  border: 1px solid rgba(14, 168, 150, 0.32);
+}
+.rail {
+  margin-top: 22px;
+}
+.track {
+  position: relative;
+  height: 6px;
+  border-radius: 6px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  margin: 14px 0 6px;
+}
+.track .ends {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  top: 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--steel);
+}
+.fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(14, 168, 150, 0.25), var(--signal));
+}
+.pin {
+  position: absolute;
+  top: -6px;
+  width: 2px;
+  height: 18px;
+  border-radius: 2px;
+}
+.pinlab {
+  position: absolute;
+  top: -34px;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 10px;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+.reveal {
+  margin-top: 16px;
+}
+.reveal .k {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.reveal .n {
+  font-size: 28px;
+  font-weight: 800;
+  margin-top: 4px;
+}
+.rankline {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--steel);
+}
+.rankline b {
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 16px;
+}
+.chips {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.chip {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 11px 12px;
+  background: var(--card2);
+}
+.chip .k {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.chip .v {
+  font-size: 22px;
+  font-weight: 800;
+  margin-top: 3px;
+}
+.statbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 12px 14px;
+  background: var(--card2);
+}
+.statbar .k {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.statbar .bv {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+.join {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+.namewrap {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-top: 10px;
+}
+.namewrap input {
+  flex: 1;
+  border: 1.5px solid var(--line2);
+  border-radius: 13px;
+  background: var(--card2);
+  padding: 13px 14px;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+  font-family: var(--num);
+}
+.namewrap .go {
+  border: none;
+  border-radius: 13px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 800;
+  padding: 0 18px;
+  font-size: 14px;
+  cursor: pointer;
+}
 
 /* win */
-.winscr{justify-content:center;background:
-  radial-gradient(120% 60% at 50% 0%, rgba(232,146,10,.34), transparent 55%),
-  radial-gradient(95% 40% at 50% 102%, rgba(244,96,42,.20), transparent 60%)}
-.glow-head{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold-deep);text-align:center}
-.winnum{text-align:center;font-size:64px;font-weight:900;letter-spacing:-.01em;line-height:1;margin:6px 0 2px;
-  background:linear-gradient(180deg,#E8920A,var(--hot));-webkit-background-clip:text;background-clip:text;color:transparent}
-.winsub{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);margin-top:8px}
-.rank1{margin:30px auto 0;display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
-.rank1 .hash{font-size:30px;font-weight:900;color:var(--jackpot);font-family:var(--num)}
-.confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:50}
+.winscr {
+  justify-content: center;
+  background:
+    radial-gradient(
+      120% 60% at 50% 0%,
+      rgba(232, 146, 10, 0.34),
+      transparent 55%
+    ),
+    radial-gradient(
+      95% 40% at 50% 102%,
+      rgba(244, 96, 42, 0.2),
+      transparent 60%
+    );
+}
+.glow-head {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  text-align: center;
+}
+.winnum {
+  text-align: center;
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin: 6px 0 2px;
+  background: linear-gradient(180deg, #e8920a, var(--hot));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.winsub {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-top: 8px;
+}
+.rank1 {
+  margin: 30px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.rank1 .hash {
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--jackpot);
+  font-family: var(--num);
+}
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
 
 /* leaderboard */
-.board{margin-top:20px;display:flex;flex-direction:column;gap:6px}
-.board .lb-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
-.board .lb-row.me{border-color:var(--signal);background:var(--signal-soft)}
-.board .lb-rank{font-family:var(--mono);font-size:12px;color:var(--steel);width:46px}
-.board .lb-name{font-weight:700;flex:1}
-.board .lb-score{font-weight:800;font-variant-numeric:tabular-nums}
+.board {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.board .lb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+.board .lb-row.me {
+  border-color: var(--signal);
+  background: var(--signal-soft);
+}
+.board .lb-rank {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--steel);
+  width: 46px;
+}
+.board .lb-name {
+  font-weight: 700;
+  flex: 1;
+}
+.board .lb-score {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
 
-.share{margin-top:14px;width:100%;border:1.5px solid var(--line2);background:transparent;color:var(--ink);
-  border-radius:14px;padding:14px;font-family:var(--num);font-weight:700;font-size:14px;cursor:pointer}
+.share {
+  margin-top: 14px;
+  width: 100%;
+  border: 1.5px solid var(--line2);
+  background: transparent;
+  color: var(--ink);
+  border-radius: 14px;
+  padding: 14px;
+  font-family: var(--num);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
 
-@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
 ```
 
 - [ ] **Step 2: Replace `src/index.css` contents**
@@ -255,13 +642,14 @@ git add -A
 git commit -m "feat: add Millionle token system and global styles"
 ```
 
-> **Note:** self-hosted fonts are added in Task 14. Until then Archivo/Space Mono fall back to system fonts — acceptable for logic tasks.
+> **Note:** self-hosted fonts are added in Task 14. Until then Archivo/Space Mono fall back to system fonts - acceptable for logic tasks.
 
 ---
 
 ## Task 3: Engine types + game config
 
 **Files:**
+
 - Create: `src/engine/types.ts`
 - Create: `src/game.config.ts`
 
@@ -308,6 +696,7 @@ git commit -m "feat: add engine types and Millionle game config"
 ## Task 4: PRNG (TDD)
 
 **Files:**
+
 - Create: `src/engine/prng.ts`
 - Test: `src/engine/prng.test.ts`
 
@@ -339,7 +728,7 @@ describe("seededRandom", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/engine/prng.test.ts`
-Expected: FAIL — cannot resolve `./prng`.
+Expected: FAIL - cannot resolve `./prng`.
 
 - [ ] **Step 3: Write `src/engine/prng.ts`**
 
@@ -390,6 +779,7 @@ git commit -m "feat: add seeded PRNG (xmur3 + mulberry32)"
 ## Task 5: Answer generation (TDD)
 
 **Files:**
+
 - Create: `src/engine/answer.ts`
 - Test: `src/engine/answer.test.ts`
 
@@ -402,7 +792,9 @@ import { MILLIONLE } from "../game.config";
 
 describe("answerForDate", () => {
   test("is deterministic for a date", () => {
-    expect(answerForDate(MILLIONLE, "2026-06-23")).toBe(answerForDate(MILLIONLE, "2026-06-23"));
+    expect(answerForDate(MILLIONLE, "2026-06-23")).toBe(
+      answerForDate(MILLIONLE, "2026-06-23"),
+    );
   });
   test("stays within [min,max]", () => {
     for (const d of ["2026-01-01", "2026-06-23", "2026-12-31", "2027-03-15"]) {
@@ -413,7 +805,9 @@ describe("answerForDate", () => {
     }
   });
   test("varies day to day", () => {
-    expect(answerForDate(MILLIONLE, "2026-06-23")).not.toBe(answerForDate(MILLIONLE, "2026-06-24"));
+    expect(answerForDate(MILLIONLE, "2026-06-23")).not.toBe(
+      answerForDate(MILLIONLE, "2026-06-24"),
+    );
   });
 });
 ```
@@ -421,7 +815,7 @@ describe("answerForDate", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/engine/answer.test.ts`
-Expected: FAIL — cannot resolve `./answer`.
+Expected: FAIL - cannot resolve `./answer`.
 
 - [ ] **Step 3: Write `src/engine/answer.ts`**
 
@@ -454,6 +848,7 @@ git commit -m "feat: add deterministic daily answer generation"
 ## Task 6: Scoring + tiers (TDD)
 
 **Files:**
+
 - Create: `src/engine/score.ts`
 - Test: `src/engine/score.test.ts`
 
@@ -495,16 +890,25 @@ describe("tier", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/engine/score.test.ts`
-Expected: FAIL — cannot resolve `./score`.
+Expected: FAIL - cannot resolve `./score`.
 
 - [ ] **Step 3: Write `src/engine/score.ts`**
 
 ```ts
 export type TierId =
-  | "dead-on" | "within5" | "within100" | "within2500"
-  | "within50k" | "within250k" | "beyond";
+  | "dead-on"
+  | "within5"
+  | "within100"
+  | "within2500"
+  | "within50k"
+  | "within250k"
+  | "beyond";
 
-export interface Tier { id: TierId; label: string; copy: string; }
+export interface Tier {
+  id: TierId;
+  label: string;
+  copy: string;
+}
 
 export function distance(guess: number, answer: number): number {
   return Math.abs(guess - answer);
@@ -515,13 +919,31 @@ export function score(guess: number, answer: number, max = 1_000_000): number {
 }
 
 const LADDER: { max: number; tier: Tier }[] = [
-  { max: 0, tier: { id: "dead-on", label: "Dead on", copy: "One in a million." } },
+  {
+    max: 0,
+    tier: { id: "dead-on", label: "Dead on", copy: "One in a million." },
+  },
   { max: 5, tier: { id: "within5", label: "Within 5", copy: "Breathtaking." } },
-  { max: 100, tier: { id: "within100", label: "Within 100", copy: "Razor close." } },
-  { max: 2500, tier: { id: "within2500", label: "Within 2,500", copy: "Dialed in." } },
-  { max: 50000, tier: { id: "within50k", label: "Within 50k", copy: "Solid read." } },
-  { max: 250000, tier: { id: "within250k", label: "Within 250k", copy: "In the zone." } },
-  { max: Infinity, tier: { id: "beyond", label: "Off the mark", copy: "Not today." } },
+  {
+    max: 100,
+    tier: { id: "within100", label: "Within 100", copy: "Razor close." },
+  },
+  {
+    max: 2500,
+    tier: { id: "within2500", label: "Within 2,500", copy: "Dialed in." },
+  },
+  {
+    max: 50000,
+    tier: { id: "within50k", label: "Within 50k", copy: "Solid read." },
+  },
+  {
+    max: 250000,
+    tier: { id: "within250k", label: "Within 250k", copy: "In the zone." },
+  },
+  {
+    max: Infinity,
+    tier: { id: "beyond", label: "Off the mark", copy: "Not today." },
+  },
 ];
 
 export function tier(d: number): Tier {
@@ -546,6 +968,7 @@ git commit -m "feat: add scoring and distance tiers"
 ## Task 7: Dates (TDD)
 
 **Files:**
+
 - Create: `src/engine/date.ts`
 - Test: `src/engine/date.test.ts`
 
@@ -594,14 +1017,17 @@ describe("puzzleNumber", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/engine/date.test.ts`
-Expected: FAIL — cannot resolve `./date`.
+Expected: FAIL - cannot resolve `./date`.
 
 - [ ] **Step 3: Write `src/engine/date.ts`**
 
 ```ts
 const DAY = 86_400_000;
 
-export function localDate(offsetMinutes: number, now: Date = new Date()): string {
+export function localDate(
+  offsetMinutes: number,
+  now: Date = new Date(),
+): string {
   const clamped = Math.max(-720, Math.min(840, Math.round(offsetMinutes)));
   return new Date(now.getTime() + clamped * 60_000).toISOString().slice(0, 10);
 }
@@ -635,6 +1061,7 @@ git commit -m "feat: add local-date derivation and puzzle numbering"
 ## Task 8: Formatting (TDD)
 
 **Files:**
+
 - Create: `src/engine/format.ts`
 - Test: `src/engine/format.test.ts`
 
@@ -672,7 +1099,7 @@ describe("parseGuess", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/engine/format.test.ts`
-Expected: FAIL — cannot resolve `./format`.
+Expected: FAIL - cannot resolve `./format`.
 
 - [ ] **Step 3: Write `src/engine/format.ts`**
 
@@ -681,7 +1108,11 @@ export function formatNumber(n: number): string {
   return n.toLocaleString("en-US");
 }
 
-export function parseGuess(input: string, min = 1, max = 1_000_000): number | null {
+export function parseGuess(
+  input: string,
+  min = 1,
+  max = 1_000_000,
+): number | null {
   const cleaned = input.replace(/[,\s]/g, "");
   if (!/^\d+$/.test(cleaned)) return null;
   const n = Number(cleaned);
@@ -707,6 +1138,7 @@ git commit -m "feat: add number formatting and guess parsing"
 ## Task 9: Stats (TDD)
 
 **Files:**
+
 - Create: `src/engine/stats.ts`
 - Test: `src/engine/stats.test.ts`
 
@@ -724,7 +1156,9 @@ const rows: GuessRow[] = [
 
 describe("computeStats", () => {
   test("lifetime points = sum of score", () => {
-    expect(computeStats(rows, "2026-06-23").lifetimePoints).toBe(995000 + 999688 + 952769);
+    expect(computeStats(rows, "2026-06-23").lifetimePoints).toBe(
+      995000 + 999688 + 952769,
+    );
   });
   test("closest ever = min distance", () => {
     expect(computeStats(rows, "2026-06-23").closestEver).toBe(312);
@@ -746,19 +1180,29 @@ describe("computeStats", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/engine/stats.test.ts`
-Expected: FAIL — cannot resolve `./stats`.
+Expected: FAIL - cannot resolve `./stats`.
 
 - [ ] **Step 3: Write `src/engine/stats.ts`**
 
 ```ts
 import { addDays } from "./date";
 
-export interface GuessRow { date: string; distance: number; score: number; }
-export interface Stats { streak: number; lifetimePoints: number; closestEver: number; }
+export interface GuessRow {
+  date: string;
+  distance: number;
+  score: number;
+}
+export interface Stats {
+  streak: number;
+  lifetimePoints: number;
+  closestEver: number;
+}
 
 export function computeStats(rows: GuessRow[], today: string): Stats {
   const lifetimePoints = rows.reduce((sum, r) => sum + r.score, 0);
-  const closestEver = rows.length ? Math.min(...rows.map((r) => r.distance)) : 0;
+  const closestEver = rows.length
+    ? Math.min(...rows.map((r) => r.distance))
+    : 0;
 
   const dates = new Set(rows.map((r) => r.date));
   let streak = 0;
@@ -788,6 +1232,7 @@ git commit -m "feat: add server-rule stats aggregation"
 ## Task 10: Identity + history stores (TDD)
 
 **Files:**
+
 - Create: `src/store/identity.ts`
 - Create: `src/store/history.ts`
 - Test: `src/store/store.test.ts`
@@ -814,10 +1259,22 @@ describe("identity", () => {
 
 describe("history", () => {
   test("appends and finds by date, replacing same-date rows", () => {
-    appendHistory({ date: "2026-06-23", guess: 412769, distance: 47231, score: 952769 });
+    appendHistory({
+      date: "2026-06-23",
+      guess: 412769,
+      distance: 47231,
+      score: 952769,
+    });
     expect(findByDate("2026-06-23")?.score).toBe(952769);
-    appendHistory({ date: "2026-06-23", guess: 1, distance: 0, score: 1_000_000 });
-    expect(readHistory().filter((r) => r.date === "2026-06-23")).toHaveLength(1);
+    appendHistory({
+      date: "2026-06-23",
+      guess: 1,
+      distance: 0,
+      score: 1_000_000,
+    });
+    expect(readHistory().filter((r) => r.date === "2026-06-23")).toHaveLength(
+      1,
+    );
     expect(findByDate("2026-06-23")?.score).toBe(1_000_000);
   });
 });
@@ -826,7 +1283,7 @@ describe("history", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/store/store.test.ts`
-Expected: FAIL — cannot resolve `./identity`.
+Expected: FAIL - cannot resolve `./identity`.
 
 - [ ] **Step 3: Write `src/store/identity.ts`**
 
@@ -855,7 +1312,12 @@ export function setName(name: string): void {
 - [ ] **Step 4: Write `src/store/history.ts`**
 
 ```ts
-export interface HistoryRow { date: string; guess: number; distance: number; score: number; }
+export interface HistoryRow {
+  date: string;
+  guess: number;
+  distance: number;
+  score: number;
+}
 const KEY = "millionle.history";
 
 export function readHistory(): HistoryRow[] {
@@ -895,6 +1357,7 @@ git commit -m "feat: add identity and guess-history stores"
 ## Task 11: API contract types
 
 **Files:**
+
 - Create: `src/api/types.ts`
 
 - [ ] **Step 1: Create `src/api/types.ts`**
@@ -903,7 +1366,11 @@ git commit -m "feat: add identity and guess-history stores"
 import type { TierId } from "../engine/score";
 import type { Stats } from "../engine/stats";
 
-export interface GuessRequest { uuid: string; guess: number; offset: number; }
+export interface GuessRequest {
+  uuid: string;
+  guess: number;
+  offset: number;
+}
 export interface GuessResponse {
   score: number;
   distance: number;
@@ -916,12 +1383,33 @@ export interface GuessResponse {
   stats: Stats;
 }
 
-export interface NameRequest { uuid: string; name: string; offset: number; }
-export interface NameResponse { ok: true; rank: number; }
+export interface NameRequest {
+  uuid: string;
+  name: string;
+  offset: number;
+}
+export interface NameResponse {
+  ok: true;
+  rank: number;
+}
 
-export interface LeaderboardRequest { date?: string; limit?: number; uuid?: string; offset?: number; }
-export interface LeaderboardEntry { rank: number; name: string; score: number; isMe: boolean; }
-export interface LeaderboardResponse { date: string; entries: LeaderboardEntry[]; myRank: number | null; }
+export interface LeaderboardRequest {
+  date?: string;
+  limit?: number;
+  uuid?: string;
+  offset?: number;
+}
+export interface LeaderboardEntry {
+  rank: number;
+  name: string;
+  score: number;
+  isMe: boolean;
+}
+export interface LeaderboardResponse {
+  date: string;
+  entries: LeaderboardEntry[];
+  myRank: number | null;
+}
 
 export interface GameApi {
   guess(req: GuessRequest): Promise<GuessResponse>;
@@ -942,6 +1430,7 @@ git commit -m "feat: add GameApi contract types"
 ## Task 12: Mock API (TDD)
 
 **Files:**
+
 - Create: `src/api/mockApi.ts`
 - Test: `src/api/mockApi.test.ts`
 
@@ -1008,19 +1497,28 @@ describe("mockApi.submitName + leaderboard", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/api/mockApi.test.ts`
-Expected: FAIL — cannot resolve `./mockApi`.
+Expected: FAIL - cannot resolve `./mockApi`.
 
 - [ ] **Step 3: Write `src/api/mockApi.ts`**
 
 ```ts
 import type {
-  GameApi, GuessRequest, GuessResponse,
-  NameRequest, NameResponse,
-  LeaderboardRequest, LeaderboardResponse, LeaderboardEntry,
+  GameApi,
+  GuessRequest,
+  GuessResponse,
+  NameRequest,
+  NameResponse,
+  LeaderboardRequest,
+  LeaderboardResponse,
+  LeaderboardEntry,
 } from "./types";
 import { MILLIONLE } from "../game.config";
 import { answerForDate } from "../engine/answer";
-import { score as scoreFn, distance as distanceFn, tier } from "../engine/score";
+import {
+  score as scoreFn,
+  distance as distanceFn,
+  tier,
+} from "../engine/score";
 import { localDate, puzzleNumber } from "../engine/date";
 import { computeStats, type GuessRow } from "../engine/stats";
 import { seededRandom } from "../engine/prng";
@@ -1031,11 +1529,33 @@ const LATENCY = 250;
 const wait = () => new Promise((r) => setTimeout(r, LATENCY));
 
 const FAKE_NAMES = [
-  "ava", "kai", "noah", "mia", "leo", "zoe", "ravi", "ivy", "omar", "luna",
-  "finn", "nia", "theo", "remy", "june", "cole", "sage", "wren", "dax", "iris",
+  "ava",
+  "kai",
+  "noah",
+  "mia",
+  "leo",
+  "zoe",
+  "ravi",
+  "ivy",
+  "omar",
+  "luna",
+  "finn",
+  "nia",
+  "theo",
+  "remy",
+  "june",
+  "cole",
+  "sage",
+  "wren",
+  "dax",
+  "iris",
 ];
 
-interface BoardRow { name: string; score: number; isMe: boolean; }
+interface BoardRow {
+  name: string;
+  score: number;
+  isMe: boolean;
+}
 
 /** Deterministic synthetic opponents for a date. */
 function syntheticBoard(date: string): { name: string; score: number }[] {
@@ -1050,7 +1570,9 @@ function syntheticBoard(date: string): { name: string; score: number }[] {
   return rows;
 }
 
-function namedKey(date: string) { return `millionle.named.${date}`; }
+function namedKey(date: string) {
+  return `millionle.named.${date}`;
+}
 
 function getMyName(date: string): string | null {
   return localStorage.getItem(namedKey(date));
@@ -1081,7 +1603,11 @@ export const mockApi: GameApi = {
     }
 
     const stats = computeStats(
-      readHistory().map((r) => ({ date: r.date, distance: r.distance, score: r.score })),
+      readHistory().map((r) => ({
+        date: r.date,
+        distance: r.distance,
+        score: r.score,
+      })),
       date,
     );
 
@@ -1111,7 +1637,10 @@ export const mockApi: GameApi = {
     await wait();
     const date = req.date ?? localDate(req.offset ?? 0);
     const limit = req.limit ?? 100;
-    const rows: BoardRow[] = syntheticBoard(date).map((o) => ({ ...o, isMe: false }));
+    const rows: BoardRow[] = syntheticBoard(date).map((o) => ({
+      ...o,
+      isMe: false,
+    }));
 
     const myRow = findByDate(date);
     const myName = getMyName(date) ?? getName();
@@ -1149,6 +1678,7 @@ git commit -m "feat: add localStorage-backed mock API with synthetic board"
 ## Task 13: API client seam
 
 **Files:**
+
 - Create: `src/api/client.ts`
 
 - [ ] **Step 1: Create `src/api/client.ts`**
@@ -1175,6 +1705,7 @@ git commit -m "feat: add GameApi client seam"
 ## Task 14: Self-hosted fonts
 
 **Files:**
+
 - Create: `src/styles/fonts.css`
 - Modify: `src/index.css`
 - Add font files under `src/assets/fonts/`
@@ -1182,6 +1713,7 @@ git commit -m "feat: add GameApi client seam"
 - [ ] **Step 1: Install font packages**
 
 Run:
+
 ```bash
 npm i @fontsource-variable/archivo @fontsource/space-mono
 ```
@@ -1218,6 +1750,7 @@ git commit -m "feat: self-host Archivo and Space Mono"
 ## Task 15: GuessInput component (TDD)
 
 **Files:**
+
 - Create: `src/components/GuessInput.tsx`
 - Test: `src/components/GuessInput.test.tsx`
 
@@ -1236,7 +1769,9 @@ describe("GuessInput", () => {
     const input = screen.getByLabelText(/your one guess/i);
     await userEvent.type(input, "412769");
     expect(input).toHaveValue("412,769");
-    await userEvent.click(screen.getByRole("button", { name: /lock in guess/i }));
+    await userEvent.click(
+      screen.getByRole("button", { name: /lock in guess/i }),
+    );
     expect(onSubmit).toHaveBeenCalledWith(412769);
   });
 
@@ -1245,7 +1780,9 @@ describe("GuessInput", () => {
     render(<GuessInput onSubmit={onSubmit} />);
     const input = screen.getByLabelText(/your one guess/i);
     await userEvent.type(input, "0");
-    expect(screen.getByRole("button", { name: /lock in guess/i })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /lock in guess/i }),
+    ).toBeDisabled();
   });
 });
 ```
@@ -1253,7 +1790,7 @@ describe("GuessInput", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/components/GuessInput.test.tsx`
-Expected: FAIL — cannot resolve `./GuessInput`.
+Expected: FAIL - cannot resolve `./GuessInput`.
 
 - [ ] **Step 3: Write `src/components/GuessInput.tsx`**
 
@@ -1261,10 +1798,19 @@ Expected: FAIL — cannot resolve `./GuessInput`.
 import { useState } from "react";
 import { formatNumber, parseGuess } from "../engine/format";
 
-export function GuessInput({ onSubmit }: { onSubmit: (guess: number) => void }) {
+export function GuessInput({
+  onSubmit,
+}: {
+  onSubmit: (guess: number) => void;
+}) {
   const [raw, setRaw] = useState("");
   const parsed = parseGuess(raw);
-  const display = raw === "" ? "" : (parsed !== null ? formatNumber(parsed) : raw.replace(/[^\d]/g, ""));
+  const display =
+    raw === ""
+      ? ""
+      : parsed !== null
+        ? formatNumber(parsed)
+        : raw.replace(/[^\d]/g, "");
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const digits = e.target.value.replace(/[^\d]/g, "").slice(0, 7);
@@ -1281,15 +1827,24 @@ export function GuessInput({ onSubmit }: { onSubmit: (guess: number) => void }) 
           placeholder="412,769"
           value={display}
           onChange={handleChange}
-          onKeyDown={(e) => { if (e.key === "Enter" && parsed !== null) onSubmit(parsed); }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && parsed !== null) onSubmit(parsed);
+          }}
         />
       </div>
       <div className="hintc">whole number · 1–1,000,000</div>
       <div className="railmini">
         <div className="track" />
-        <div className="ends"><span>1</span><span>1,000,000</span></div>
+        <div className="ends">
+          <span>1</span>
+          <span>1,000,000</span>
+        </div>
       </div>
-      <button className="cta" disabled={parsed === null} onClick={() => parsed !== null && onSubmit(parsed)}>
+      <button
+        className="cta"
+        disabled={parsed === null}
+        onClick={() => parsed !== null && onSubmit(parsed)}
+      >
         Lock in guess
       </button>
     </>
@@ -1314,6 +1869,7 @@ git commit -m "feat: add GuessInput with live comma formatting and validation"
 ## Task 16: ScoreCounter component (TDD)
 
 **Files:**
+
 - Create: `src/components/ScoreCounter.tsx`
 - Test: `src/components/ScoreCounter.test.tsx`
 
@@ -1337,7 +1893,7 @@ describe("ScoreCounter", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/components/ScoreCounter.test.tsx`
-Expected: FAIL — cannot resolve `./ScoreCounter`.
+Expected: FAIL - cannot resolve `./ScoreCounter`.
 
 - [ ] **Step 3: Write `src/components/ScoreCounter.tsx`**
 
@@ -1347,13 +1903,23 @@ import { animate } from "motion";
 import { formatNumber } from "../engine/format";
 
 const prefersReduced = () =>
-  typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  typeof matchMedia !== "undefined" &&
+  matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-export function ScoreCounter({ value, className = "score" }: { value: number; className?: string }) {
+export function ScoreCounter({
+  value,
+  className = "score",
+}: {
+  value: number;
+  className?: string;
+}) {
   const [shown, setShown] = useState(prefersReduced() ? value : 0);
 
   useEffect(() => {
-    if (prefersReduced()) { setShown(value); return; }
+    if (prefersReduced()) {
+      setShown(value);
+      return;
+    }
     const controls = animate(0, value, {
       duration: 1.4,
       ease: "easeOut",
@@ -1383,6 +1949,7 @@ git commit -m "feat: add ScoreCounter odometer count-up"
 ## Task 17: OddsRail component (signature) (TDD)
 
 **Files:**
+
 - Create: `src/components/OddsRail.tsx`
 - Test: `src/components/OddsRail.test.tsx`
 
@@ -1407,14 +1974,15 @@ describe("OddsRail", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/components/OddsRail.test.tsx`
-Expected: FAIL — cannot resolve `./OddsRail`.
+Expected: FAIL - cannot resolve `./OddsRail`.
 
 - [ ] **Step 3: Write `src/components/OddsRail.tsx`**
 
 ```tsx
 import { formatNumber } from "../engine/format";
 
-const MIN = 1, MAX = 1_000_000;
+const MIN = 1,
+  MAX = 1_000_000;
 const pct = (v: number) => ((v - MIN) / (MAX - MIN)) * 100;
 
 export function OddsRail({ guess, answer }: { guess: number; answer: number }) {
@@ -1427,12 +1995,31 @@ export function OddsRail({ guess, answer }: { guess: number; answer: number }) {
     <div className="rail">
       <div className="label">How close you landed</div>
       <div className="track" style={{ marginTop: 30 }}>
-        <div className="ends"><span>1</span><span>1,000,000</span></div>
-        <div className="fill" style={{ left: `${left}%`, width: `${width}%` }} />
-        <div className="pin" style={{ left: `${gp}%`, background: "var(--signal)" }} />
-        <div className="pinlab" style={{ left: `${gp}%`, color: "#08776a" }}>YOU {formatNumber(guess)}</div>
-        <div className="pin" style={{ left: `${ap}%`, background: "var(--ink)" }} />
-        <div className="pinlab" style={{ left: `${ap}%`, top: -52, color: "var(--ink)" }}>ANSWER {formatNumber(answer)}</div>
+        <div className="ends">
+          <span>1</span>
+          <span>1,000,000</span>
+        </div>
+        <div
+          className="fill"
+          style={{ left: `${left}%`, width: `${width}%` }}
+        />
+        <div
+          className="pin"
+          style={{ left: `${gp}%`, background: "var(--signal)" }}
+        />
+        <div className="pinlab" style={{ left: `${gp}%`, color: "#08776a" }}>
+          YOU {formatNumber(guess)}
+        </div>
+        <div
+          className="pin"
+          style={{ left: `${ap}%`, background: "var(--ink)" }}
+        />
+        <div
+          className="pinlab"
+          style={{ left: `${ap}%`, top: -52, color: "var(--ink)" }}
+        >
+          ANSWER {formatNumber(answer)}
+        </div>
       </div>
     </div>
   );
@@ -1456,6 +2043,7 @@ git commit -m "feat: add OddsRail range-reveal viz"
 ## Task 18: WinCelebration component
 
 **Files:**
+
 - Create: `src/components/WinCelebration.tsx`
 - Test: `src/components/WinCelebration.test.tsx`
 
@@ -1480,7 +2068,7 @@ describe("WinCelebration", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/components/WinCelebration.test.tsx`
-Expected: FAIL — cannot resolve `./WinCelebration`.
+Expected: FAIL - cannot resolve `./WinCelebration`.
 
 - [ ] **Step 3: Write `src/components/WinCelebration.tsx`**
 
@@ -1490,14 +2078,20 @@ import confetti from "canvas-confetti";
 import { formatNumber } from "../engine/format";
 
 const prefersReduced = () =>
-  typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  typeof matchMedia !== "undefined" &&
+  matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export function WinCelebration({ rank }: { rank: number }) {
   useEffect(() => {
     if (prefersReduced()) return;
     const end = Date.now() + 1200;
     (function frame() {
-      confetti({ particleCount: 5, spread: 70, origin: { y: 0.3 }, colors: ["#E8920A", "#F4602A", "#0EA896", "#0E1A22"] });
+      confetti({
+        particleCount: 5,
+        spread: 70,
+        origin: { y: 0.3 },
+        colors: ["#E8920A", "#F4602A", "#0EA896", "#0E1A22"],
+      });
       if (Date.now() < end) requestAnimationFrame(frame);
     })();
   }, []);
@@ -1507,7 +2101,10 @@ export function WinCelebration({ rank }: { rank: number }) {
       <div className="glow-head">★ One in a million ★</div>
       <div className="winnum">{formatNumber(1_000_000)}</div>
       <div className="winsub">Dead on · perfect score</div>
-      <div className="rank1"><span className="hash">#{rank}</span><span>on today’s board</span></div>
+      <div className="rank1">
+        <span className="hash">#{rank}</span>
+        <span>on today’s board</span>
+      </div>
     </>
   );
 }
@@ -1530,6 +2127,7 @@ git commit -m "feat: add WinCelebration detonation"
 ## Task 19: Small result components
 
 **Files:**
+
 - Create: `src/components/DistanceBadge.tsx`
 - Create: `src/components/StatChips.tsx`
 - Create: `src/components/JoinBoard.tsx`
@@ -1552,7 +2150,11 @@ describe("result bits", () => {
     expect(screen.getByText(/within 50k/i)).toBeInTheDocument();
   });
   test("StatChips show all three stats", () => {
-    render(<StatChips stats={{ streak: 7, closestEver: 312, lifetimePoints: 8412769 }} />);
+    render(
+      <StatChips
+        stats={{ streak: 7, closestEver: 312, lifetimePoints: 8412769 }}
+      />,
+    );
     expect(screen.getByText("7")).toBeInTheDocument();
     expect(screen.getByText("312")).toBeInTheDocument();
     expect(screen.getByText("8,412,769")).toBeInTheDocument();
@@ -1569,11 +2171,12 @@ describe("result bits", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/components/result-bits.test.tsx`
-Expected: FAIL — cannot resolve `./DistanceBadge`.
+Expected: FAIL - cannot resolve `./DistanceBadge`.
 
 - [ ] **Step 3: Write the four components**
 
 `src/components/DistanceBadge.tsx`:
+
 ```tsx
 import { tier } from "../engine/score";
 
@@ -1583,6 +2186,7 @@ export function DistanceBadge({ distance }: { distance: number }) {
 ```
 
 `src/components/StatChips.tsx`:
+
 ```tsx
 import type { Stats } from "../engine/stats";
 import { formatNumber } from "../engine/format";
@@ -1591,8 +2195,14 @@ export function StatChips({ stats }: { stats: Stats }) {
   return (
     <>
       <div className="chips">
-        <div className="chip"><div className="k">Streak</div><div className="v">{stats.streak}</div></div>
-        <div className="chip"><div className="k">Closest ever</div><div className="v">{formatNumber(stats.closestEver)}</div></div>
+        <div className="chip">
+          <div className="k">Streak</div>
+          <div className="v">{stats.streak}</div>
+        </div>
+        <div className="chip">
+          <div className="k">Closest ever</div>
+          <div className="v">{formatNumber(stats.closestEver)}</div>
+        </div>
       </div>
       <div className="statbar">
         <span className="k">Lifetime points</span>
@@ -1604,17 +2214,35 @@ export function StatChips({ stats }: { stats: Stats }) {
 ```
 
 `src/components/JoinBoard.tsx`:
+
 ```tsx
 import { useState } from "react";
 
-export function JoinBoard({ defaultName, onJoin }: { defaultName: string; onJoin: (name: string) => void }) {
+export function JoinBoard({
+  defaultName,
+  onJoin,
+}: {
+  defaultName: string;
+  onJoin: (name: string) => void;
+}) {
   const [name, setName] = useState(defaultName);
   const clean = name.trim().slice(0, 20);
   return (
     <div className="join">
       <div className="namewrap">
-        <input aria-label="Your name" value={name} maxLength={20} onChange={(e) => setName(e.target.value)} />
-        <button className="go" disabled={clean.length === 0} onClick={() => onJoin(clean)}>Join board</button>
+        <input
+          aria-label="Your name"
+          value={name}
+          maxLength={20}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <button
+          className="go"
+          disabled={clean.length === 0}
+          onClick={() => onJoin(clean)}
+        >
+          Join board
+        </button>
       </div>
     </div>
   );
@@ -1622,13 +2250,27 @@ export function JoinBoard({ defaultName, onJoin }: { defaultName: string; onJoin
 ```
 
 `src/components/ShareButton.tsx`:
+
 ```tsx
 import { formatNumber } from "../engine/format";
 
-export function ShareButton({ puzzle, guess, distance, score }: { puzzle: number; guess: number; distance: number; score: number }) {
-  const line = `MILLIONLE No.${puzzle} — ${formatNumber(guess)} → off by ${formatNumber(distance)} · score ${formatNumber(score)}`;
+export function ShareButton({
+  puzzle,
+  guess,
+  distance,
+  score,
+}: {
+  puzzle: number;
+  guess: number;
+  distance: number;
+  score: number;
+}) {
+  const line = `MILLIONLE No.${puzzle} - ${formatNumber(guess)} → off by ${formatNumber(distance)} · score ${formatNumber(score)}`;
   return (
-    <button className="share" onClick={() => navigator.clipboard?.writeText(line)}>
+    <button
+      className="share"
+      onClick={() => navigator.clipboard?.writeText(line)}
+    >
       Share result
     </button>
   );
@@ -1652,6 +2294,7 @@ git commit -m "feat: add DistanceBadge, StatChips, JoinBoard, ShareButton"
 ## Task 20: Leaderboard component
 
 **Files:**
+
 - Create: `src/components/Leaderboard.tsx`
 - Test: `src/components/Leaderboard.test.tsx`
 
@@ -1664,10 +2307,14 @@ import { Leaderboard } from "./Leaderboard";
 
 describe("Leaderboard", () => {
   test("renders entries and marks the player row", () => {
-    render(<Leaderboard entries={[
-      { rank: 1, name: "ava1", score: 999999, isMe: false },
-      { rank: 2, name: "seanr", score: 952769, isMe: true },
-    ]} />);
+    render(
+      <Leaderboard
+        entries={[
+          { rank: 1, name: "ava1", score: 999999, isMe: false },
+          { rank: 2, name: "seanr", score: 952769, isMe: true },
+        ]}
+      />,
+    );
     expect(screen.getByText("ava1")).toBeInTheDocument();
     expect(screen.getByText("952,769")).toBeInTheDocument();
     expect(screen.getByText("seanr").closest(".lb-row")).toHaveClass("me");
@@ -1678,7 +2325,7 @@ describe("Leaderboard", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/components/Leaderboard.test.tsx`
-Expected: FAIL — cannot resolve `./Leaderboard`.
+Expected: FAIL - cannot resolve `./Leaderboard`.
 
 - [ ] **Step 3: Write `src/components/Leaderboard.tsx`**
 
@@ -1718,6 +2365,7 @@ git commit -m "feat: add Leaderboard list"
 ## Task 21: IdleScreen
 
 **Files:**
+
 - Create: `src/screens/IdleScreen.tsx`
 - Test: `src/screens/IdleScreen.test.tsx`
 
@@ -1735,7 +2383,9 @@ describe("IdleScreen", () => {
     render(<IdleScreen puzzle={432} onGuess={onGuess} />);
     expect(screen.getByText(/No\. 432/)).toBeInTheDocument();
     await userEvent.type(screen.getByLabelText(/your one guess/i), "412769");
-    await userEvent.click(screen.getByRole("button", { name: /lock in guess/i }));
+    await userEvent.click(
+      screen.getByRole("button", { name: /lock in guess/i }),
+    );
     expect(onGuess).toHaveBeenCalledWith(412769);
   });
 });
@@ -1744,21 +2394,32 @@ describe("IdleScreen", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/screens/IdleScreen.test.tsx`
-Expected: FAIL — cannot resolve `./IdleScreen`.
+Expected: FAIL - cannot resolve `./IdleScreen`.
 
 - [ ] **Step 3: Write `src/screens/IdleScreen.tsx`**
 
 ```tsx
 import { GuessInput } from "../components/GuessInput";
 
-export function IdleScreen({ puzzle, onGuess }: { puzzle: number; onGuess: (guess: number) => void }) {
+export function IdleScreen({
+  puzzle,
+  onGuess,
+}: {
+  puzzle: number;
+  onGuess: (guess: number) => void;
+}) {
   return (
     <div className="app">
       <div className="row">
-        <div className="mark">MILLI<span className="o">O</span>NLE</div>
+        <div className="mark">
+          MILLI<span className="o">O</span>NLE
+        </div>
         <div className="puzzle">No. {puzzle}</div>
       </div>
-      <div className="tagc">One hidden number, <b>1 to 1,000,000</b>.<br />One guess — how close can you land?</div>
+      <div className="tagc">
+        One hidden number, <b>1 to 1,000,000</b>.<br />
+        One guess - how close can you land?
+      </div>
       <div className="hero">
         <GuessInput onSubmit={onGuess} />
       </div>
@@ -1784,6 +2445,7 @@ git commit -m "feat: add IdleScreen"
 ## Task 22: ResultScreen
 
 **Files:**
+
 - Create: `src/screens/ResultScreen.tsx`
 - Test: `src/screens/ResultScreen.test.tsx`
 
@@ -1798,21 +2460,48 @@ import type { GuessResponse } from "../api/types";
 vi.mock("canvas-confetti", () => ({ default: vi.fn() }));
 
 const base: GuessResponse = {
-  score: 952769, distance: 47231, answer: 365538, rank: 1243,
-  alreadyPlayed: false, tier: "within50k", date: "2026-06-23", puzzle: 432,
+  score: 952769,
+  distance: 47231,
+  answer: 365538,
+  rank: 1243,
+  alreadyPlayed: false,
+  tier: "within50k",
+  date: "2026-06-23",
+  puzzle: 432,
   stats: { streak: 7, lifetimePoints: 8412769, closestEver: 312 },
 };
 
 describe("ResultScreen", () => {
   test("loss variant shows score, rank and stats", () => {
-    render(<ResultScreen result={base} guess={412769} defaultName="seanr" onJoin={vi.fn()} />);
+    render(
+      <ResultScreen
+        result={base}
+        guess={412769}
+        defaultName="seanr"
+        onJoin={vi.fn()}
+      />,
+    );
     expect(screen.getByText("952,769")).toBeInTheDocument();
     expect(screen.getByText(/#1,243/)).toBeInTheDocument();
     expect(screen.getByText("8,412,769")).toBeInTheDocument();
   });
   test("win variant shows the detonation and no stat bar", () => {
-    const win = { ...base, score: 1_000_000, distance: 0, answer: 500000, tier: "dead-on" as const, rank: 1 };
-    render(<ResultScreen result={win} guess={500000} defaultName="seanr" onJoin={vi.fn()} />);
+    const win = {
+      ...base,
+      score: 1_000_000,
+      distance: 0,
+      answer: 500000,
+      tier: "dead-on" as const,
+      rank: 1,
+    };
+    render(
+      <ResultScreen
+        result={win}
+        guess={500000}
+        defaultName="seanr"
+        onJoin={vi.fn()}
+      />,
+    );
     expect(screen.getByText(/one in a million/i)).toBeInTheDocument();
     expect(screen.queryByText("Lifetime points")).not.toBeInTheDocument();
   });
@@ -1822,7 +2511,7 @@ describe("ResultScreen", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/screens/ResultScreen.test.tsx`
-Expected: FAIL — cannot resolve `./ResultScreen`.
+Expected: FAIL - cannot resolve `./ResultScreen`.
 
 - [ ] **Step 3: Write `src/screens/ResultScreen.tsx`**
 
@@ -1838,7 +2527,10 @@ import { ShareButton } from "../components/ShareButton";
 import { formatNumber } from "../engine/format";
 
 export function ResultScreen({
-  result, guess, defaultName, onJoin,
+  result,
+  guess,
+  defaultName,
+  onJoin,
 }: {
   result: GuessResponse;
   guess: number;
@@ -1859,7 +2551,9 @@ export function ResultScreen({
   return (
     <div className="app">
       <div className="row">
-        <div className="mark" style={{ fontSize: 18 }}>MILLI<span className="o">O</span>NLE</div>
+        <div className="mark" style={{ fontSize: 18 }}>
+          MILLI<span className="o">O</span>NLE
+        </div>
         <div className="puzzle">No. {result.puzzle} · locked</div>
       </div>
 
@@ -1875,10 +2569,17 @@ export function ResultScreen({
         <div className="k">off by</div>
         <div className="n">{formatNumber(result.distance)}</div>
       </div>
-      <div className="rankline">You’d sit at <b>#{formatNumber(result.rank)}</b> on today’s board.</div>
+      <div className="rankline">
+        You’d sit at <b>#{formatNumber(result.rank)}</b> on today’s board.
+      </div>
 
       <StatChips stats={result.stats} />
-      <ShareButton puzzle={result.puzzle} guess={guess} distance={result.distance} score={result.score} />
+      <ShareButton
+        puzzle={result.puzzle}
+        guess={guess}
+        distance={result.distance}
+        score={result.score}
+      />
       <JoinBoard defaultName={defaultName} onJoin={onJoin} />
     </div>
   );
@@ -1902,6 +2603,7 @@ git commit -m "feat: add ResultScreen with win/loss variants"
 ## Task 23: App state machine + wiring
 
 **Files:**
+
 - Replace: `src/App.tsx`
 - Test: `src/App.test.tsx`
 
@@ -1920,16 +2622,27 @@ describe("App flow", () => {
 
   test("idle → guess → result, then revisiting stays locked", async () => {
     const { unmount } = render(<App />);
-    await userEvent.type(await screen.findByLabelText(/your one guess/i), "500000");
-    await userEvent.click(screen.getByRole("button", { name: /lock in guess/i }));
+    await userEvent.type(
+      await screen.findByLabelText(/your one guess/i),
+      "500000",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: /lock in guess/i }),
+    );
 
-    await waitFor(() => expect(screen.getByText(/your score today|one in a million/i)).toBeInTheDocument());
+    await waitFor(() =>
+      expect(
+        screen.getByText(/your score today|one in a million/i),
+      ).toBeInTheDocument(),
+    );
 
     unmount();
     render(<App />);
     // revisit: should not show the idle CTA again
     await waitFor(() =>
-      expect(screen.queryByRole("button", { name: /lock in guess/i })).not.toBeInTheDocument(),
+      expect(
+        screen.queryByRole("button", { name: /lock in guess/i }),
+      ).not.toBeInTheDocument(),
     );
   });
 });
@@ -1938,7 +2651,7 @@ describe("App flow", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/App.test.tsx`
-Expected: FAIL — current scaffold App has no guess input.
+Expected: FAIL - current scaffold App has no guess input.
 
 - [ ] **Step 3: Replace `src/App.tsx`**
 
@@ -1973,10 +2686,12 @@ export default function App() {
     const existing = findByDate(date);
     if (existing && !result) {
       setGuess(existing.guess);
-      api.guess({ uuid: getUuid(), guess: existing.guess, offset: offset() }).then((r) => {
-        setResult(r);
-        setPhase("result");
-      });
+      api
+        .guess({ uuid: getUuid(), guess: existing.guess, offset: offset() })
+        .then((r) => {
+          setResult(r);
+          setPhase("result");
+        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -1993,18 +2708,25 @@ export default function App() {
   async function handleJoin(name: string) {
     setName(name);
     await api.submitName({ uuid: getUuid(), name, offset: offset() });
-    const lb = await api.leaderboard({ uuid: getUuid(), offset: offset(), limit: 100 });
+    const lb = await api.leaderboard({
+      uuid: getUuid(),
+      offset: offset(),
+      limit: 100,
+    });
     setBoard(lb.entries);
     setPhase("joined");
   }
 
-  if (phase === "idle") return <IdleScreen puzzle={puzzle} onGuess={handleGuess} />;
+  if (phase === "idle")
+    return <IdleScreen puzzle={puzzle} onGuess={handleGuess} />;
 
   if (phase === "joined" && result) {
     return (
       <div className="app">
         <div className="row">
-          <div className="mark" style={{ fontSize: 18 }}>MILLI<span className="o">O</span>NLE</div>
+          <div className="mark" style={{ fontSize: 18 }}>
+            MILLI<span className="o">O</span>NLE
+          </div>
           <div className="puzzle">No. {result.puzzle} · on the board</div>
         </div>
         <Leaderboard entries={board} />
@@ -2013,7 +2735,14 @@ export default function App() {
   }
 
   if (result) {
-    return <ResultScreen result={result} guess={guess} defaultName={getName()} onJoin={handleJoin} />;
+    return (
+      <ResultScreen
+        result={result}
+        guess={guess}
+        defaultName={getName()}
+        onJoin={handleJoin}
+      />
+    );
   }
 
   return <div className="app" aria-busy={loading} />;
@@ -2028,11 +2757,13 @@ Expected: PASS.
 - [ ] **Step 5: Verify the full suite, build, and lint**
 
 Run:
+
 ```bash
 npm test
 npm run build
 npm run lint
 ```
+
 Expected: all tests pass, build succeeds, lint clean.
 
 - [ ] **Step 6: Commit**
@@ -2047,6 +2778,7 @@ git commit -m "feat: wire App state machine (idle → result → joined)"
 ## Task 24: Manual smoke + cleanup
 
 **Files:**
+
 - Modify: `index.html` (title), `src/main.tsx` (confirm imports)
 
 - [ ] **Step 1: Set the document title in `index.html`**
@@ -2060,6 +2792,7 @@ It should already (`import './index.css'`). No `App.css` import remains.
 - [ ] **Step 3: Manual smoke**
 
 Run: `npm run dev`, open the local URL, and verify:
+
 - Idle: hero guess input centered, comma formatting, CTA enables on a valid number.
 - Guess a non-perfect number → result: score counts up, rail shows both pins + fill, rank + stats render.
 - Join → leaderboard shows your highlighted row.
@@ -2079,5 +2812,5 @@ git commit -m "chore: set title and finalize smoke pass"
 ## Self-Review notes (already applied)
 
 - **Spec coverage:** engine (PRNG/answer/score/tier/date/format/stats) → Tasks 4–9; api seam + mock + synthetic board → Tasks 11–13; identity/history → Task 10; all screens/components incl. signature OddsRail + WinCelebration → Tasks 15–22; state machine + revisit-lock → Task 23; tokens/fonts → Tasks 2, 14; sharing → Task 19; reduced-motion → in ScoreCounter/WinCelebration + global CSS. Leaderboard view + synthetic opponents in scope → Tasks 12, 20, 23.
-- **Out of scope (per spec):** backend, PWA, accounts, emoji share bar, multi-game routing — none planned. Correct.
+- **Out of scope (per spec):** backend, PWA, accounts, emoji share bar, multi-game routing - none planned. Correct.
 - **Type consistency:** `Stats` (engine/stats) and `TierId` (engine/score) are the single definitions imported by `api/types`, components, and screens. `GuessResponse` shape is identical across mock, ResultScreen, and App. `offset` convention (`-getTimezoneOffset()`) is consistent in App and the date tests.

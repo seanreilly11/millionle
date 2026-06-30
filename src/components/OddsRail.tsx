@@ -23,7 +23,7 @@ export function OddsRail({ guess, answer }: { guess: number; answer: number }) {
           className="absolute top-0 bottom-0 rounded-full rail-fill"
           style={{ left: `${left}%`, width: `${width}%` }}
         />
-        {/* ANSWER pin — label above track */}
+        {/* ANSWER pin - label above track */}
         <div
           className="absolute -top-1.5 w-0.5 h-4 rounded-sm bg-ink"
           style={{ left: `${ap}%` }}
@@ -34,7 +34,7 @@ export function OddsRail({ guess, answer }: { guess: number; answer: number }) {
         >
           ANSWER {formatNumber(answer)}
         </div>
-        {/* YOU pin — label below track */}
+        {/* YOU pin - label below track */}
         <div
           className="absolute -top-1.5 w-0.5 h-4 rounded-sm bg-signal"
           style={{ left: `${gp}%` }}

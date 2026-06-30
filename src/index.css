@@ -23,7 +23,7 @@
   --font-num: "Archivo Variable", system-ui, sans-serif;
   --font-mono: "Space Mono", ui-monospace, monospace;
 
-  /* Custom font sizes — v4 uses --text-* namespace */
+  /* Custom font sizes - v4 uses --text-* namespace */
   --text-2xs: 0.5625rem;
   --text-2xs--line-height: 1;
   --text-label: 0.625rem;
