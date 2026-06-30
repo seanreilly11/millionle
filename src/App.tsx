@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { getApi } from "./api/client";
 import { MILLIONLE } from "./game.config";
 import { localDate, puzzleNumber } from "./engine/date";
@@ -10,9 +11,14 @@ import { Leaderboard } from "./components/Leaderboard";
 import { AppShell } from "./components/AppShell";
 import { GameHeader } from "./components/GameHeader";
 import { InitLoader } from "./components/InitLoader";
+import { prefersReducedMotion, SNAPPY, BOUNCY } from "./lib/motion";
 
 type Phase = "idle" | "result" | "joined";
 const offset = () => -new Date().getTimezoneOffset();
+
+const exitVariant = { opacity: 0, y: -12 };
+const enterVariant = { opacity: 0, y: 12 };
+const restVariant = { opacity: 1, y: 0 };
 
 export default function App() {
   const api = getApi();
@@ -68,13 +74,14 @@ export default function App() {
 
   if (initializing) return <InitLoader />;
 
-  if (phase === "idle")
-    return (
-      <IdleScreen puzzle={puzzle} onGuess={handleGuess} loading={loading} />
-    );
+  const reduced = prefersReducedMotion();
+  const transition = reduced ? { duration: 0 } : phase === "result" ? BOUNCY : SNAPPY;
 
-  if (phase === "joined" && result) {
-    return (
+  let content: React.ReactNode;
+  if (phase === "idle") {
+    content = <IdleScreen puzzle={puzzle} onGuess={handleGuess} loading={loading} />;
+  } else if (phase === "joined" && result) {
+    content = (
       <AppShell>
         <GameHeader puzzle={result.puzzle} suffix="on the board" />
         <button
@@ -86,10 +93,8 @@ export default function App() {
         <Leaderboard entries={board} />
       </AppShell>
     );
-  }
-
-  if (result) {
-    return (
+  } else if (result) {
+    content = (
       <ResultScreen
         result={result}
         guess={guess}
@@ -98,7 +103,21 @@ export default function App() {
         onSeeLeaderboard={loadLeaderboard}
       />
     );
+  } else {
+    content = <AppShell aria-busy={loading}><span className="sr-only">Loading…</span></AppShell>;
   }
 
-  return <AppShell aria-busy={loading}><span className="sr-only">Loading…</span></AppShell>;
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={phase}
+        initial={reduced ? restVariant : enterVariant}
+        animate={restVariant}
+        exit={reduced ? restVariant : exitVariant}
+        transition={transition}
+      >
+        {content}
+      </motion.div>
+    </AnimatePresence>
+  );
 }
