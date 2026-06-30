@@ -18,41 +18,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const answer = answerForDate(date)
   const distance = Math.abs(guess - answer)
 
-  // Check if already played
-  const { data: existing } = await sb
-    .from('plays')
-    .select('distance')
-    .eq('uuid', uuid)
-    .eq('date', date)
-    .single()
+  // First round trip: everything that doesn't depend on another query's result.
+  const [
+    { data: existing },
+    { data: namedForRank },
+    { data: nameRow },
+  ] = await Promise.all([
+    sb.from('plays').select('distance').eq('uuid', uuid).eq('date', date).single(),
+    sb.from('names').select('uuid').eq('date', date),
+    sb.from('names').select('name').eq('uuid', uuid).eq('date', date).single(),
+  ])
 
   const alreadyPlayed = existing !== null
   const finalDistance = alreadyPlayed ? existing.distance : distance
-
-  if (!alreadyPlayed) {
-    await sb.from('plays').insert({ uuid, date, guess, distance })
-  }
-
-  // Rank: position among named players only
-  const { data: namedForRank } = await sb
-    .from('names')
-    .select('uuid')
-    .eq('date', date)
-
   const namedUuidsForRank = (namedForRank ?? []).map((n) => n.uuid)
 
-  let rank = 1
-  if (namedUuidsForRank.length > 0) {
-    const { count: betterCount } = await sb
-      .from('plays')
-      .select('*', { count: 'exact', head: true })
-      .eq('date', date)
-      .lt('distance', finalDistance)
-      .in('uuid', namedUuidsForRank)
-    rank = (betterCount ?? 0) + 1
-  }
+  // Second round trip: insert (if needed) and the rank count, in parallel.
+  // Safe to run together because betterCount uses `lt`, so it never matches
+  // the row being inserted regardless of insert ordering.
+  const [, betterCountResult] = await Promise.all([
+    alreadyPlayed ? null : sb.from('plays').insert({ uuid, date, guess, distance }),
+    namedUuidsForRank.length > 0
+      ? sb
+          .from('plays')
+          .select('*', { count: 'exact', head: true })
+          .eq('date', date)
+          .lt('distance', finalDistance)
+          .in('uuid', namedUuidsForRank)
+      : null,
+  ])
 
-  // Stats: all plays for this uuid
+  const rank = namedUuidsForRank.length > 0 ? (betterCountResult?.count ?? 0) + 1 : 1
+
+  // Third round trip: re-fetch now that the insert above has landed.
   const { data: allPlays } = await sb
     .from('plays')
     .select('date, distance')
@@ -60,14 +58,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .order('date')
 
   const stats = computeStats(allPlays ?? [], date)
-
-  // hasJoined: name exists for uuid + date
-  const { data: nameRow } = await sb
-    .from('names')
-    .select('name')
-    .eq('uuid', uuid)
-    .eq('date', date)
-    .single()
 
   return res.status(200).json({
     distance: finalDistance,
