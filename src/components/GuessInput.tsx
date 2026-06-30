@@ -1,10 +1,8 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { formatNumber, parseGuess } from "../engine/format";
 
 export function GuessInput({ onSubmit, loading = false }: { onSubmit: (guess: number) => void; loading?: boolean }) {
   const [raw, setRaw] = useState("");
-  const [pulseKey, setPulseKey] = useState(0);
-  const underlineRef = useRef<HTMLDivElement>(null);
   const parsed = parseGuess(raw);
   const display =
     raw === ""
@@ -16,16 +14,6 @@ export function GuessInput({ onSubmit, loading = false }: { onSubmit: (guess: nu
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const digits = e.target.value.replace(/[^\d]/g, "").slice(0, 7);
     setRaw(digits);
-    setPulseKey((k) => k + 1);
-    // Force a reflow so the CSS animation restarts even though the class
-    // never actually leaves the element (a plain re-render wouldn't replay
-    // an already-applied keyframe animation).
-    const el = underlineRef.current;
-    if (el) {
-      el.classList.remove("input-pulse");
-      void el.offsetWidth;
-      el.classList.add("input-pulse");
-    }
   }
 
   return (
@@ -33,11 +21,7 @@ export function GuessInput({ onSubmit, loading = false }: { onSubmit: (guess: nu
       <div className="font-mono text-label tracking-input text-steel uppercase">
         Your one guess
       </div>
-      <div
-        ref={underlineRef}
-        data-pulse-key={pulseKey}
-        className={`inline-flex items-center gap-2 px-1.5 pb-3 border-b-2 border-signal${pulseKey > 0 ? " input-pulse" : ""}`}
-      >
+      <div className="inline-flex items-center gap-2 px-1.5 pb-3 border-b-2 border-signal">
         <input
           className="guess-input font-num text-display font-extrabold tracking-tight text-ink w-full text-center tabular-nums"
           type="text"
