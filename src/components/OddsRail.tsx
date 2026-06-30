@@ -1,5 +1,7 @@
+import { motion } from "motion/react";
 import { formatNumber } from "../engine/format";
 import { MonoLabel } from "./MonoLabel";
+import { prefersReducedMotion, BOUNCY, STAGGER_MS } from "../lib/motion";
 
 const MIN = 1,
   MAX = 1_000_000;
@@ -10,6 +12,10 @@ export function OddsRail({ guess, answer }: { guess: number; answer: number }) {
   const ap = pct(answer);
   const left = Math.min(gp, ap);
   const width = Math.abs(gp - ap);
+  const reduced = prefersReducedMotion();
+
+  const fillTransition = reduced ? { duration: 0 } : { ...BOUNCY, delay: STAGGER_MS / 1000 };
+  const pinTransition = reduced ? { duration: 0 } : { ...BOUNCY, delay: (STAGGER_MS * 1.3) / 1000 };
 
   return (
     <div className="mt-8">
@@ -19,32 +25,42 @@ export function OddsRail({ guess, answer }: { guess: number; answer: number }) {
           <span>{Intl.NumberFormat().format(MIN)}</span>
           <span>{Intl.NumberFormat().format(MAX)}</span>
         </div>
-        <div
+        <motion.div
+          data-testid="rail-fill"
           className="absolute top-0 bottom-0 rounded-full rail-fill"
-          style={{ left: `${left}%`, width: `${width}%` }}
+          style={{ left: `${left}%` }}
+          initial={reduced ? { width: `${width}%` } : { width: "0%" }}
+          animate={{ width: `${width}%` }}
+          transition={fillTransition}
         />
-        {/* ANSWER pin - label above track */}
-        <div
-          className="absolute -top-1.5 w-0.5 h-4 rounded-sm bg-ink"
+        {/* ANSWER pin + label */}
+        <motion.div
+          data-testid="answer-pin"
+          className="absolute"
           style={{ left: `${ap}%` }}
-        />
-        <div
-          className="absolute -top-7 -translate-x-1/2 font-mono text-label whitespace-nowrap tracking-wide text-ink"
-          style={{ left: `${ap}%` }}
+          initial={reduced ? { opacity: 1, x: 0 } : { opacity: 0, x: -16 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={pinTransition}
         >
-          ANSWER {formatNumber(answer)}
-        </div>
-        {/* YOU pin - label below track */}
-        <div
-          className="absolute -top-1.5 w-0.5 h-4 rounded-sm bg-signal"
+          <div className="absolute -top-1.5 w-0.5 h-4 rounded-sm bg-ink" />
+          <div className="absolute -top-7 -translate-x-1/2 font-mono text-label whitespace-nowrap tracking-wide text-ink">
+            ANSWER {formatNumber(answer)}
+          </div>
+        </motion.div>
+        {/* YOU pin + label */}
+        <motion.div
+          data-testid="guess-pin"
+          className="absolute"
           style={{ left: `${gp}%` }}
-        />
-        <div
-          className="absolute top-5 -translate-x-1/2 font-mono text-label whitespace-nowrap tracking-wide text-badge-text"
-          style={{ left: `${gp}%` }}
+          initial={reduced ? { opacity: 1, x: 0 } : { opacity: 0, x: -16 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={pinTransition}
         >
-          YOU {formatNumber(guess)}
-        </div>
+          <div className="absolute -top-1.5 w-0.5 h-4 rounded-sm bg-signal" />
+          <div className="absolute top-5 -translate-x-1/2 font-mono text-label whitespace-nowrap tracking-wide text-badge-text">
+            YOU {formatNumber(guess)}
+          </div>
+        </motion.div>
       </div>
     </div>
   );
