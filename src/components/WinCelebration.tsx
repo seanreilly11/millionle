@@ -1,26 +1,37 @@
 import { useEffect } from "react";
 import confetti from "canvas-confetti";
+import { motion } from "motion/react";
 import { formatNumber } from "../engine/format";
-import { prefersReducedMotion } from "../lib/motion";
+import { prefersReducedMotion, BOUNCY } from "../lib/motion";
 
 export function WinCelebration({ rank }: { rank: number }) {
   useEffect(() => {
     if (prefersReducedMotion()) return;
-    const end = Date.now() + 1200;
-    (function frame() {
-      confetti({ particleCount: 5, spread: 70, origin: { y: 0.3 }, colors: ["#E8920A", "#F4602A", "#0EA896", "#0E1A22"] });
-      if (Date.now() < end) requestAnimationFrame(frame);
-    })();
+    const start = setTimeout(() => {
+      const end = Date.now() + 1200;
+      (function frame() {
+        confetti({ particleCount: 5, spread: 70, origin: { y: 0.3 }, colors: ["#E8920A", "#F4602A", "#0EA896", "#0E1A22"] });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+    }, 150);
+    return () => clearTimeout(start);
   }, []);
+
+  const reduced = prefersReducedMotion();
 
   return (
     <>
       <div className="font-mono font-bold text-sm tracking-heading uppercase text-gold-deep text-center">
         ★ One in a million ★
       </div>
-      <h2 className="win-number text-center text-win font-black leading-none my-1.5">
+      <motion.h2
+        className="win-number text-center text-win font-black leading-none my-1.5"
+        initial={reduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={reduced ? { duration: 0 } : BOUNCY}
+      >
         {formatNumber(1_000_000)}
-      </h2>
+      </motion.h2>
       <div className="text-center font-mono text-xs tracking-label uppercase text-gold-deep mt-2">
         Dead on
       </div>

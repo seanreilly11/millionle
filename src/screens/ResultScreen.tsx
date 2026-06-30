@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import type { GuessResponse } from "../api/types";
 import { ScoreCounter } from "../components/ScoreCounter";
 import { DistanceBadge } from "../components/DistanceBadge";
@@ -11,6 +12,18 @@ import { AppShell } from "../components/AppShell";
 import { GameHeader } from "../components/GameHeader";
 import { MonoLabel } from "../components/MonoLabel";
 import { formatNumber } from "../engine/format";
+import { prefersReducedMotion, BOUNCY, STAGGER_MS } from "../lib/motion";
+
+function revealProps(index: number) {
+  const reduced = prefersReducedMotion();
+  return {
+    initial: reduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.92 },
+    animate: { opacity: 1, scale: 1 },
+    transition: reduced
+      ? { duration: 0 }
+      : { ...BOUNCY, delay: (index * STAGGER_MS) / 1000 },
+  };
+}
 
 export function ResultScreen({
   result,
@@ -49,16 +62,18 @@ export function ResultScreen({
 
       <section aria-label="Today's result" className="mt-4">
         <MonoLabel tracking="tracking-label-lg">The answer</MonoLabel>
-        <ScoreCounter value={result.answer} />
+        <motion.div {...revealProps(0)}>
+          <ScoreCounter value={result.answer} />
+        </motion.div>
         <div className="mt-5">
           <MonoLabel tracking="tracking-label">off by</MonoLabel>
           <div className="text-3xl font-extrabold">
             {formatNumber(result.distance)}
           </div>
         </div>
-        <div className="mt-4">
+        <motion.div className="mt-4" {...revealProps(1)}>
           <DistanceBadge distance={result.distance} />
-        </div>
+        </motion.div>
       </section>
 
       <OddsRail guess={guess} answer={result.answer} />
@@ -71,7 +86,9 @@ export function ResultScreen({
         on today's board.
       </div>
 
-      <StatChips stats={result.stats} />
+      <motion.div {...revealProps(3)}>
+        <StatChips stats={result.stats} />
+      </motion.div>
       <ShareButton
         puzzle={result.puzzle}
         guess={guess}
