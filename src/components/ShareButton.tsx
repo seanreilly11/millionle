@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { buildShare, getTier } from "../engine/copy";
 import { trackEvent } from "../api/trackEvent";
-import { SITE_URL } from "../game.config";
+import { SITE_URL, SITE_URL_SHORT } from "../game.config";
 
 export function ShareButton({
   puzzle,
@@ -18,7 +18,8 @@ export function ShareButton({
     trackEvent("share", { tier: getTier(distance).id, distance });
     const text = buildShare(distance, puzzle);
     if (navigator.share && navigator.maxTouchPoints > 0) {
-      await navigator.share({ text, url: SITE_URL });
+      const textWithoutUrl = text.replace(`\n${SITE_URL_SHORT}`, "");
+      await navigator.share({ text: textWithoutUrl, url: SITE_URL });
       return;
     }
     navigator.clipboard
