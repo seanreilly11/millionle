@@ -1,7 +1,6 @@
 import type { GameConfig } from "./engine/types";
 
-export const SITE_URL = "https://millionle.com/";
-export const SITE_URL_SHORT = "millionle.com";
+export const SITE_URL = "https://millionle.com";
 
 export const MILLIONLE: GameConfig = {
   name: "millionle",

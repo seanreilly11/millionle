@@ -1,5 +1,5 @@
 import { formatNumber } from "./format";
-import { SITE_URL_SHORT } from "../game.config";
+import { SITE_URL } from "../game.config";
 
 interface CopyTier {
   id: string;
@@ -11,7 +11,7 @@ interface CopyTier {
 }
 
 export const millionleCopy = {
-  url: SITE_URL_SHORT,
+  url: SITE_URL,
 
   // Share output shape:  `MILLIONLE No.{n}\n{emoji} {line}\n{url}`
   template: "MILLIONLE No.{n}\n{emoji} {line}\n{url}",
