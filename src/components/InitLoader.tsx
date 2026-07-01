@@ -2,7 +2,7 @@ const DIGITS = "1,000,000";
 
 export function InitLoader() {
   return (
-    <div className="win-bg min-h-dvh flex flex-col items-center justify-center gap-5">
+    <div className="win-bg min-h-svh flex flex-col items-center justify-center gap-5">
       <p className="font-mono text-xs tracking-label-lg uppercase text-steel">
         Millionle
       </p>

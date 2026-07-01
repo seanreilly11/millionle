@@ -7,7 +7,12 @@
   html,
   body,
   #root {
-    height: 100%;
+    /* svh (stable small viewport), not 100%/lvh: on mobile a percentage
+       height resolves to the toolbar-hidden (large) viewport, which is taller
+       than the visible area while the toolbar shows - that mismatch adds
+       scrollable dead space below the content. min-height lets tall content
+       still grow and scroll normally. */
+    min-height: 100svh;
   }
   body {
     background-color: var(--color-paper);
