@@ -23,7 +23,7 @@ export function JoinBoard({
   }
 
   return (
-    <div className="mt-auto border-t border-line pt-4">
+    <div className="mt-6 border-t border-line pt-4">
       <div className="flex gap-2.5 items-stretch mt-2.5">
         <input
           className="flex-1 border-2 border-line2 rounded-xl bg-card2 px-3.5 py-3 font-semibold text-base text-ink font-num"
