@@ -8,6 +8,13 @@ const MIN = 1,
   MAX = 1_000_000;
 const pct = (v: number) => ((v - MIN) / (MAX - MIN)) * 100;
 
+// Below this rail position, the centered label would overflow the left edge,
+// so left-align it to a fixed spot instead of centering on the pin.
+const EDGE_PCT = 6;
+// Center on the pin normally; near the left edge, pin the label to a fixed left value.
+const labelShift = (p: number) =>
+  p < EDGE_PCT ? "translateX(-5px)" : "translateX(-50%)";
+
 // Swap to false to fall back to the original tick-mark rail.
 const USE_CHOREO_RAIL = true;
 
@@ -60,7 +67,10 @@ function ClassicOddsRail({ guess, answer }: { guess: number; answer: number }) {
           transition={pinTransition}
         >
           <div className="absolute -top-1.5 w-0.5 h-4 rounded-sm bg-ink" />
-          <div className="absolute -top-7 -translate-x-1/2 font-mono text-label whitespace-nowrap tracking-wide text-ink">
+          <div
+            className="absolute -top-7 font-mono text-label whitespace-nowrap tracking-wide text-ink"
+            style={{ transform: labelShift(ap) }}
+          >
             ANSWER {formatNumber(answer)}
           </div>
         </motion.div>
@@ -74,7 +84,10 @@ function ClassicOddsRail({ guess, answer }: { guess: number; answer: number }) {
           transition={pinTransition}
         >
           <div className="absolute -top-1.5 w-0.5 h-4 rounded-sm bg-signal" />
-          <div className="absolute top-5 -translate-x-1/2 font-mono text-label whitespace-nowrap tracking-wide text-badge-text">
+          <div
+            className="absolute top-5 font-mono text-label whitespace-nowrap tracking-wide text-badge-text"
+            style={{ transform: labelShift(gp) }}
+          >
             YOU {formatNumber(guess)}
           </div>
         </motion.div>
@@ -152,7 +165,10 @@ function ChoreoOddsRail({ guess, answer }: { guess: number; answer: number }) {
           <div
             className={`absolute -top-1 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-signal shadow-[0_0_0_4px_var(--color-card)] ${settled ? "rail-idle-pulse" : ""}`}
           />
-          <div className="absolute top-5 -translate-x-1/2 font-mono text-label whitespace-nowrap tracking-wide text-badge-text">
+          <div
+            className="absolute top-5 font-mono text-label whitespace-nowrap tracking-wide text-badge-text"
+            style={{ transform: labelShift(gp) }}
+          >
             YOU {formatNumber(guess)}
           </div>
         </motion.div>
@@ -182,7 +198,10 @@ function ChoreoOddsRail({ guess, answer }: { guess: number; answer: number }) {
           <div
             className={`absolute -top-1 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-card border-2 border-ink ${settled ? "rail-idle-pulse" : ""}`}
           />
-          <div className="absolute -top-7 -translate-x-1/2 font-mono text-label whitespace-nowrap tracking-wide text-ink">
+          <div
+            className="absolute -top-7 font-mono text-label whitespace-nowrap tracking-wide text-ink"
+            style={{ transform: labelShift(ap) }}
+          >
             ANSWER {formatNumber(answer)}
           </div>
         </motion.div>
