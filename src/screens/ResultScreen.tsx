@@ -31,12 +31,14 @@ export function ResultScreen({
   defaultName,
   onJoin,
   onSeeLeaderboard,
+  joining = false,
 }: {
   result: GuessResponse;
   guess: number;
   defaultName: string;
   onJoin: (name: string) => void;
   onSeeLeaderboard: () => void;
+  joining?: boolean;
 }) {
   const isWin = result.distance === 0;
   const boardAction = result.hasJoined ? (
@@ -44,7 +46,7 @@ export function ResultScreen({
       See leaderboard
     </DarkButton>
   ) : (
-    <JoinBoard defaultName={defaultName} onJoin={onJoin} />
+    <JoinBoard defaultName={defaultName} onJoin={onJoin} loading={joining} />
   );
 
   if (isWin) {

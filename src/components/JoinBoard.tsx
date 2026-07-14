@@ -5,9 +5,11 @@ import { isProfane } from "../utils/profanity";
 export function JoinBoard({
   defaultName,
   onJoin,
+  loading = false,
 }: {
   defaultName: string;
   onJoin: (name: string) => void;
+  loading?: boolean;
 }) {
   const [name, setName] = useState(defaultName);
   const [error, setError] = useState("");
@@ -31,12 +33,17 @@ export function JoinBoard({
           placeholder="Your name"
           value={name}
           maxLength={20}
+          disabled={loading}
           onChange={(e) => {
             setName(e.target.value);
             setError("");
           }}
         />
-        <DarkButton disabled={clean.length === 0} onClick={handleJoin}>
+        <DarkButton
+          disabled={clean.length === 0}
+          loading={loading}
+          onClick={handleJoin}
+        >
           Join board
         </DarkButton>
       </div>

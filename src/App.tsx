@@ -27,6 +27,7 @@ export default function App() {
   const [guess, setGuess] = useState(0);
   const [board, setBoard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
+  const [joining, setJoining] = useState(false);
   const [initializing, setInitializing] = useState(true);
 
   const date = localDate(offset());
@@ -60,10 +61,17 @@ export default function App() {
   }
 
   async function handleJoin(name: string) {
+    setJoining(true);
     setName(name);
-    await api.submitName({ uuid: getUuid(), name, offset: offset() });
-    await loadLeaderboard();
-    setResult((r) => r ? { ...r, hasJoined: true } : r);
+    // submitName and leaderboard are independent - run them in parallel.
+    const [, lb] = await Promise.all([
+      api.submitName({ uuid: getUuid(), name, offset: offset() }),
+      api.leaderboard({ uuid: getUuid(), offset: offset() }),
+    ]);
+    setBoard(lb.entries);
+    setResult((r) => (r ? { ...r, hasJoined: true } : r));
+    setPhase("joined");
+    setJoining(false);
   }
 
   async function loadLeaderboard() {
@@ -101,6 +109,7 @@ export default function App() {
         defaultName={getName()}
         onJoin={handleJoin}
         onSeeLeaderboard={loadLeaderboard}
+        joining={joining}
       />
     );
   } else {
