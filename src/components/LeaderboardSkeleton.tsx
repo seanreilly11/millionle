@@ -16,7 +16,7 @@ export function LeaderboardSkeleton() {
       {Array.from({ length: ROWS }).map((_, i) => (
         <div
           key={i}
-          className="flex items-center justify-between px-3.5 py-3 border border-line rounded-xl bg-card"
+          className="flex items-center justify-between px-3.5 py-4 border border-line rounded-xl bg-card"
         >
           <span className="skeleton-shimmer h-3 w-6 rounded" />
           <span className="skeleton-shimmer h-3.5 flex-1 mx-3 rounded max-w-32" />
