@@ -42,4 +42,35 @@ describe("App flow", () => {
       { timeout: 2000 },
     );
   });
-}, 10000); // 10s suite timeout - two ≥1s init waits
+
+  test("joining shows the leaderboard screen with a skeleton, then entries", async () => {
+    render(<App />);
+
+    const input = await screen.findByLabelText(
+      /your one guess/i,
+      {},
+      { timeout: 2000 },
+    );
+    await userEvent.type(input, "500000");
+    await userEvent.click(
+      screen.getByRole("button", { name: /lock in guess/i }),
+    );
+
+    // Join the board
+    const nameInput = await screen.findByLabelText(/your name/i);
+    await userEvent.type(nameInput, "tester");
+    await userEvent.click(screen.getByRole("button", { name: /join board/i }));
+
+    // Leaderboard screen renders and shows the loading skeleton first
+    await screen.findByText(/on the board/i);
+    expect(screen.getByLabelText(/loading leaderboard/i)).toBeInTheDocument();
+
+    // Skeleton is replaced by real entries once the fetch resolves
+    await waitFor(() =>
+      expect(
+        screen.queryByLabelText(/loading leaderboard/i),
+      ).not.toBeInTheDocument(),
+    );
+    expect(screen.getByText(/how close/i)).toBeInTheDocument();
+  });
+}, 15000); // suite timeout - each test waits ≥1s for the init loader

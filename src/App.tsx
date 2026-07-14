@@ -7,9 +7,8 @@ import { getUuid, getName, setName } from "./store/identity";
 import type { GuessResponse, LeaderboardEntry } from "./api/types";
 import { IdleScreen } from "./screens/IdleScreen";
 import { ResultScreen } from "./screens/ResultScreen";
-import { Leaderboard } from "./components/Leaderboard";
+import { LeaderboardScreen } from "./screens/LeaderboardScreen";
 import { AppShell } from "./components/AppShell";
-import { GameHeader } from "./components/GameHeader";
 import { InitLoader } from "./components/InitLoader";
 import { prefersReducedMotion, SNAPPY, BOUNCY } from "./lib/motion";
 
@@ -26,6 +25,7 @@ export default function App() {
   const [result, setResult] = useState<GuessResponse | null>(null);
   const [guess, setGuess] = useState(0);
   const [board, setBoard] = useState<LeaderboardEntry[]>([]);
+  const [boardLoading, setBoardLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [joining, setJoining] = useState(false);
   const [initializing, setInitializing] = useState(true);
@@ -60,24 +60,34 @@ export default function App() {
     setLoading(false);
   }
 
+  // Fetch the board whenever the leaderboard screen is shown - the name write
+  // (submitName) must be committed before this read, so we do them in sequence
+  // via the phase transition rather than racing them in parallel.
+  useEffect(() => {
+    if (phase !== "joined") return;
+    let cancelled = false;
+    setBoardLoading(true);
+    api
+      .leaderboard({ uuid: getUuid(), offset: offset() })
+      .then((lb) => {
+        if (!cancelled) setBoard(lb.entries);
+      })
+      .finally(() => {
+        if (!cancelled) setBoardLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
+
   async function handleJoin(name: string) {
     setJoining(true);
     setName(name);
-    // submitName and leaderboard are independent - run them in parallel.
-    const [, lb] = await Promise.all([
-      api.submitName({ uuid: getUuid(), name, offset: offset() }),
-      api.leaderboard({ uuid: getUuid(), offset: offset() }),
-    ]);
-    setBoard(lb.entries);
+    await api.submitName({ uuid: getUuid(), name, offset: offset() });
     setResult((r) => (r ? { ...r, hasJoined: true } : r));
     setPhase("joined");
     setJoining(false);
-  }
-
-  async function loadLeaderboard() {
-    const lb = await api.leaderboard({ uuid: getUuid(), offset: offset() });
-    setBoard(lb.entries);
-    setPhase("joined");
   }
 
   if (initializing) return <InitLoader />;
@@ -90,16 +100,12 @@ export default function App() {
     content = <IdleScreen puzzle={puzzle} onGuess={handleGuess} loading={loading} />;
   } else if (phase === "joined" && result) {
     content = (
-      <AppShell>
-        <GameHeader puzzle={result.puzzle} suffix="on the board" />
-        <button
-          className="mt-3 bg-transparent text-steel font-mono text-xs tracking-wide py-3 -mx-2 px-2 text-left hover:text-ink border-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:outline-none rounded"
-          onClick={() => setPhase("result")}
-        >
-          ← Back to result
-        </button>
-        <Leaderboard entries={board} />
-      </AppShell>
+      <LeaderboardScreen
+        puzzle={result.puzzle}
+        entries={board}
+        loading={boardLoading && board.length === 0}
+        onBack={() => setPhase("result")}
+      />
     );
   } else if (result) {
     content = (
@@ -108,7 +114,7 @@ export default function App() {
         guess={guess}
         defaultName={getName()}
         onJoin={handleJoin}
-        onSeeLeaderboard={loadLeaderboard}
+        onSeeLeaderboard={() => setPhase("joined")}
         joining={joining}
       />
     );
