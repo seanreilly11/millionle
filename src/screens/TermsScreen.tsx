@@ -255,10 +255,10 @@ export function TermsScreen() {
           <br />
           Email:{" "}
           <a
-            href="mailto:hi.millionle@gmail.com"
+            href="mailto:dovedaledev@gmail.com"
             className="text-signal underline"
           >
-            hi.millionle@gmail.com
+            dovedaledev@gmail.com
           </a>
         </blockquote>
       </Section>

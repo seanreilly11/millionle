@@ -66,10 +66,10 @@ export function PrivacyScreen() {
           <br />
           Email:{" "}
           <a
-            href="mailto:hi.millionle@gmail.com"
+            href="mailto:dovedaledev@gmail.com"
             className="text-signal underline"
           >
-            hi.millionle@gmail.com
+            dovedaledev@gmail.com
           </a>
         </Contact>
         <P>
@@ -95,10 +95,10 @@ export function PrivacyScreen() {
           that data without undue delay. If you believe a child under 16 has
           provided us with personal data, please contact us at{" "}
           <a
-            href="mailto:hi.millionle@gmail.com"
+            href="mailto:dovedaledev@gmail.com"
             className="text-signal underline"
           >
-            hi.millionle@gmail.com
+            dovedaledev@gmail.com
           </a>
           .
         </P>
@@ -297,10 +297,10 @@ export function PrivacyScreen() {
           You may obtain further information about these safeguards by
           contacting us at{" "}
           <a
-            href="mailto:hi.millionle@gmail.com"
+            href="mailto:dovedaledev@gmail.com"
             className="text-signal underline"
           >
-            hi.millionle@gmail.com
+            dovedaledev@gmail.com
           </a>
           .
         </P>
@@ -379,10 +379,10 @@ export function PrivacyScreen() {
           <li>
             Email it to us at{" "}
             <a
-              href="mailto:hi.millionle@gmail.com"
+              href="mailto:dovedaledev@gmail.com"
               className="text-signal underline"
             >
-              hi.millionle@gmail.com
+              dovedaledev@gmail.com
             </a>
             , stating which right you wish to exercise.
           </li>
@@ -465,10 +465,10 @@ export function PrivacyScreen() {
           <br />
           Email:{" "}
           <a
-            href="mailto:hi.millionle@gmail.com"
+            href="mailto:dovedaledev@gmail.com"
             className="text-signal underline"
           >
-            hi.millionle@gmail.com
+            dovedaledev@gmail.com
           </a>
         </Contact>
       </Section>
