@@ -38,8 +38,8 @@ export function PrivacyScreen() {
           and describes your rights in relation to that data.
         </P>
         <P>
-          In this Policy, "we", "us" and "our" refer to Sean Reilly, the
-          operator of the Game and the data controller responsible for your
+          In this Policy, "we", "us" and "our" refer to Dovedale Development,
+          the operator of the Game and the data controller responsible for your
           personal data. "You" and "your" refer to any individual who accesses
           or plays the Game.
         </P>
@@ -62,7 +62,8 @@ export function PrivacyScreen() {
           this Policy is:
         </P>
         <Contact>
-          <strong>Sean Reilly</strong> (sole trader)
+          <strong>Dovedale Development</strong> (eenmanszaak, sole trader
+          registered in the Netherlands)
           <br />
           Email:{" "}
           <a
@@ -461,7 +462,7 @@ export function PrivacyScreen() {
           personal data, please contact:
         </P>
         <Contact>
-          <strong>Sean Reilly</strong>
+          <strong>Dovedale Development</strong>
           <br />
           Email:{" "}
           <a

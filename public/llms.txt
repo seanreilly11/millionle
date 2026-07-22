@@ -28,7 +28,7 @@ for all players on a given day.
 
 ## Creator
 
-Made by Sean Reilly.
+Made by Dovedale Development.
 
 ## Usage
 

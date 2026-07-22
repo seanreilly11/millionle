@@ -34,8 +34,9 @@ export function TermsScreen() {
       <Section id="1" title="Introduction">
         <P>
           These Terms of Service (the "Terms") govern your access to and use of
-          Millionle (the "Game"). The Game is operated by Sean Reilly ("we",
-          "us", "our"), a sole trader established in the Netherlands. "You" and
+          Millionle (the "Game"). The Game is operated by Dovedale Development
+          ("we", "us", "our"), an eenmanszaak (sole trader) established in the
+          Netherlands. "You" and
           "your" refer to any individual who accesses or plays the Game.
         </P>
         <P>
@@ -251,7 +252,7 @@ export function TermsScreen() {
       <Section id="12" title="Contact">
         <P>For any question regarding these Terms, please contact:</P>
         <blockquote className="border-l-2 border-line2 pl-4 my-3 text-sm text-steel leading-relaxed">
-          <strong>Sean Reilly</strong>
+          <strong>Dovedale Development</strong>
           <br />
           Email:{" "}
           <a
